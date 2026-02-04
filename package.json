@@ -43,7 +43,7 @@
     "swiftlint": "node-swiftlint",
     "docgen": "docgen --api DiscoUIPlugin --output-readme README.md --output-json dist/docs.json",
     "build": "npm run embed:css && npm run clean && npm run docgen && tsc && rollup -c rollup.config.mjs",
-    "build:android": "npm run build && cd example-app && npm run build && npx cap copy android && cd android && ./gradlew assembleDebug",
+    "build:android": "npm run build && cd example-app && npm run build && npm exec -- cap copy android && cd android && ./gradlew assembleDebug",
     "clean": "rimraf ./dist",
     "embed:css": "node scripts/embed-css.js",
     "watch": "tsc --watch",
