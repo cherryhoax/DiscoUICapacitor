@@ -1,0 +1,11 @@
+{
+  "theme": "dark",
+  "accent": "#D80073",
+  "font": "SegoeUI",
+  "splash": {
+    "mode": "manual",
+    "color": "#008a00",
+    "icon": "/favicon.svg",
+    "showProgress": true
+  }
+}

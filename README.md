@@ -1,6 +1,6 @@
 # discoui-capacitor
 
-well its disco ui. in android
+DiscoUI Capacitor plugin for Android, Electron, and Web.
 
 ## Install
 
@@ -9,29 +9,42 @@ npm install discoui-capacitor
 npx cap sync
 ```
 
-## API
+## Usage
 
-<docgen-index>
+Create a disco.config.json in your app's public root (for example, www/disco.config.json):
 
-* [`echo(...)`](#echo)
-
-</docgen-index>
-
-<docgen-api>
-<!--Update the source file JSDoc comments and rerun docgen to update the docs below-->
-
-### echo(...)
-
-```typescript
-echo(options: { value: string; }) => Promise<{ value: string; }>
+```json
+{
+	"theme": "dark",
+	"accent": "#D80073",
+	"font": "SegoeUI",
+	"splash": {
+		"mode": "manual",
+		"color": "#008a00",
+		"icon": "./favicon.svg",
+		"showProgress": true
+	}
+}
 ```
 
-| Param         | Type                            |
-| ------------- | ------------------------------- |
-| **`options`** | <code>{ value: string; }</code> |
+Then call initialize:
 
-**Returns:** <code>Promise&lt;{ value: string; }&gt;</code>
+```ts
+import { DiscoUI } from 'discoui-capacitor';
 
---------------------
+await DiscoUI.initialize({
+	configPath: '/disco.config.json',
+});
+```
 
-</docgen-api>
+## API
+
+### initialize(...)
+
+```typescript
+initialize(options?: DiscoInitializeOptions) => Promise<void>
+```
+
+| Param         | Type                               |
+| ------------- | ---------------------------------- |
+| **`options`** | <code>DiscoInitializeOptions</code> |

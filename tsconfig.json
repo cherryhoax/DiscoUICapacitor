@@ -1,7 +1,9 @@
 {
   "compilerOptions": {
     "allowUnreachableCode": false,
-    "declaration": true,
+    "allowJs": true,
+    "checkJs": false,
+    "declaration": false,
     "esModuleInterop": true,
     "inlineSources": true,
     "lib": ["dom", "es2017"],
@@ -16,5 +18,5 @@
     "strict": true,
     "target": "es2017"
   },
-  "files": ["src/index.ts"]
+  "files": ["src/index.js", "src/web.js", "src/types.js"]
 }
