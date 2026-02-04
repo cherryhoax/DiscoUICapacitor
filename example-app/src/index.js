@@ -1,4 +1,4 @@
-import { DiscoApp } from 'discoui-capacitor';
+import { DiscoApp } from '../../src/index.js';
 window.DiscoApp = DiscoApp;
 const start = () => {
     if (!DiscoApp) {
