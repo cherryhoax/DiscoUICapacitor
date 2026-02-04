@@ -1,10 +1,10 @@
 import { WebPlugin } from '@capacitor/core';
 import { setDiscoAppExport } from './exports.js';
+import { cssContent } from './css.js';
 
 /** @typedef {import('./types').DiscoAppOptions} DiscoAppOptions */
 /** @typedef {import('./types').DiscoInitializeOptions} DiscoInitializeOptions */
 
-const DEFAULT_CSS_HREF = 'discoui.css';
 const DEFAULT_IMPORT_PATH = 'discoui';
 const FALLBACK_IMPORT_PATHS = ['/discoui.mjs'];
 const DEFAULT_CONFIG_PATH = '/disco.config.json';
@@ -24,6 +24,7 @@ const mergeConfig = (base, overrides) => {
 const wrapDiscoAppConstructor = (DiscoAppCtor, defaultConfig) => {
   class WrappedDiscoApp extends DiscoAppCtor {
     constructor(options) {
+      ensureInlineCss();
       super(options ?? defaultConfig);
     }
   }
@@ -39,16 +40,15 @@ const wrapDiscoAppConstructor = (DiscoAppCtor, defaultConfig) => {
   return WrappedDiscoApp;
 };
 
-const ensurePreloadCss = (cssHref) => {
+const ensureInlineCss = () => {
   if (!document?.head) return;
-  if (document.querySelector('link[data-disco-preload="true"]')) return;
+  if (document.querySelector('style[data-disco-style="true"]')) return;
+  if (!cssContent) return;
 
-  const link = document.createElement('link');
-  link.rel = 'preload';
-  link.as = 'style';
-  link.href = cssHref;
-  link.setAttribute('data-disco-preload', 'true');
-  document.head.appendChild(link);
+  const style = document.createElement('style');
+  style.setAttribute('data-disco-style', 'true');
+  style.textContent = cssContent;
+  document.head.appendChild(style);
 };
 
 const resolveDiscoAppConstructor = async (importPath) => {
@@ -94,11 +94,10 @@ export class DiscoUIWeb extends WebPlugin {
    * @returns {Promise<void>}
    */
   async initialize(options) {
-    const cssHref = options?.cssHref ?? DEFAULT_CSS_HREF;
     const importPath = options?.importPath ?? DEFAULT_IMPORT_PATH;
     const configPath = options?.configPath ?? DEFAULT_CONFIG_PATH;
 
-    ensurePreloadCss(cssHref);
+    ensureInlineCss();
 
     /** @type {Window & {discoApp?: unknown}} */
     const win = window;

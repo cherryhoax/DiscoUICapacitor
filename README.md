@@ -36,18 +36,6 @@ await DiscoUI.initialize({
 	configPath: '/disco.config.json',
 });
 
-## Vite build integration
-
-If you use Vite, include the plugin to inject DiscoUI CSS and emit DiscoUI assets into your build. This expects the DiscoUI package to ship (or generate on install) the prebuilt assets in `node_modules/discoui/dist`.
-
-```ts
-import { defineConfig } from 'vite';
-import { discoUIVitePlugin } from 'discoui-capacitor/vite';
-
-export default defineConfig({
-  plugins: [discoUIVitePlugin()],
-});
-```
 ```
 
 ## API
