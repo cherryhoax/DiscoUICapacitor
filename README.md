@@ -1,17 +1,17 @@
-# discoui-capacitor
+<div align="center">
+	<img src="assets/duic.svg" alt="DiscoUI logo" width="120" />
+	<h1>DiscoUI Capacitor</h1>
+	<p>Capacitor plugin for DiscoUI: Metro-inspired UI primitives with splash, frame navigation, and pivot pages across Android, Electron, and Web.</p>
+</div>
 
-DiscoUI Capacitor plugin for Android, Electron, and Web.
-
-## Install
-
+## Quick Start
 ```bash
 npm install discoui-capacitor
 npx cap sync
 ```
 
 ## Usage
-
-Create a disco.config.json in your app's public root (for example, www/disco.config.json):
+Create a disco.config.json in your app public root (for example, www/disco.config.json):
 
 ```json
 {
@@ -27,25 +27,34 @@ Create a disco.config.json in your app's public root (for example, www/disco.con
 }
 ```
 
-Then call initialize:
-
+Then create and launch the app:
 ```ts
-import { DiscoUI } from 'discoui-capacitor';
+import { DiscoApp } from 'discoui-capacitor';
 
-await DiscoUI.initialize({
-	configPath: '/disco.config.json',
-});
-
+const app = new DiscoApp();
+app.launch(document.querySelector('disco-frame'));
 ```
 
-## API
-
-### initialize(...)
-
-```typescript
-initialize(options?: DiscoInitializeOptions) => Promise<void>
+### Theming
+Set theme and accent on the `<html>` tag:
+```html
+<html disco-theme="auto" disco-accent="#d80073" disco-font="Segoe UI">
 ```
 
-| Param         | Type                               |
-| ------------- | ---------------------------------- |
-| **`options`** | <code>DiscoInitializeOptions</code> |
+## Project Structure
+- `src/` — Capacitor plugin implementation
+- `example-app/` — Android demo app (Vite)
+- `android/` — Native Android plugin
+
+## Development
+- `npm run build` — build the plugin bundle
+- `npm run build:android` — build debug APK for the example app
+
+## License
+This project is licensed under the [MIT License](LICENSE).
+
+## Contact
+
+For any inquiries or feedback, feel free to reach out!
+
+<a href="https://www.buymeacoffee.com/cherryhoax" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
