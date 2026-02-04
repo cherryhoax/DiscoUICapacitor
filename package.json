@@ -6,6 +6,16 @@
   "module": "src/index.js",
   "types": "src/index.d.ts",
   "unpkg": "src/index.js",
+  "exports": {
+    ".": {
+      "types": "./src/index.d.ts",
+      "import": "./src/index.js"
+    },
+    "./vite": {
+      "types": "./src/vite.d.ts",
+      "import": "./src/vite.js"
+    }
+  },
   "files": [
     "android/src/main/",
     "android/build.gradle",
@@ -37,7 +47,7 @@
     "swiftlint": "node-swiftlint",
     "docgen": "docgen --api DiscoUIPlugin --output-readme README.md --output-json dist/docs.json",
     "build": "npm run clean && npm run docgen && tsc && rollup -c rollup.config.mjs",
-    "build:android": "cd example-app && npx cap build android",
+    "build:android": "npm run build && cd example-app && npm run build && npx cap copy android && cd android && ./gradlew assembleDebug",
     "clean": "rimraf ./dist",
     "watch": "tsc --watch",
     "prepublishOnly": "npm run build"

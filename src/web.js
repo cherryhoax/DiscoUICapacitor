@@ -1,10 +1,12 @@
 import { WebPlugin } from '@capacitor/core';
+import { setDiscoAppExport } from './exports.js';
 
 /** @typedef {import('./types').DiscoAppOptions} DiscoAppOptions */
 /** @typedef {import('./types').DiscoInitializeOptions} DiscoInitializeOptions */
 
 const DEFAULT_CSS_HREF = 'discoui.css';
 const DEFAULT_IMPORT_PATH = 'discoui';
+const FALLBACK_IMPORT_PATHS = ['/discoui.mjs'];
 const DEFAULT_CONFIG_PATH = '/disco.config.json';
 
 const mergeConfig = (base, overrides) => {
@@ -17,6 +19,24 @@ const mergeConfig = (base, overrides) => {
       ...overrides.splash,
     },
   };
+};
+
+const wrapDiscoAppConstructor = (DiscoAppCtor, defaultConfig) => {
+  class WrappedDiscoApp extends DiscoAppCtor {
+    constructor(options) {
+      super(options ?? defaultConfig);
+    }
+  }
+  try {
+    Object.defineProperty(WrappedDiscoApp, 'name', {
+      value: DiscoAppCtor.name,
+      configurable: true,
+    });
+  } catch {
+    // ignore
+  }
+  Object.assign(WrappedDiscoApp, DiscoAppCtor);
+  return WrappedDiscoApp;
 };
 
 const ensurePreloadCss = (cssHref) => {
@@ -37,12 +57,24 @@ const resolveDiscoAppConstructor = async (importPath) => {
   if (win.DiscoApp) return win.DiscoApp;
   if (win.Disco?.DiscoApp) return win.Disco.DiscoApp;
 
-  try {
-    const mod = await import(/* @vite-ignore */ importPath);
-    return mod.DiscoApp ?? mod.default;
-  } catch {
-    return undefined;
+  const tryImport = async (pathToLoad) => {
+    try {
+      const mod = await import(/* @vite-ignore */ pathToLoad);
+      return mod.DiscoApp ?? mod.default;
+    } catch {
+      return undefined;
+    }
+  };
+
+  const fromPrimary = await tryImport(importPath);
+  if (fromPrimary) return fromPrimary;
+
+  for (const fallback of FALLBACK_IMPORT_PATHS) {
+    const fromFallback = await tryImport(fallback);
+    if (fromFallback) return fromFallback;
   }
+
+  return undefined;
 };
 
 const loadConfig = async (configPath) => {
@@ -70,14 +102,21 @@ export class DiscoUIWeb extends WebPlugin {
 
     /** @type {Window & {discoApp?: unknown}} */
     const win = window;
-    if (win.discoApp) return;
+    if (win.discoApp) {
+      if (!win.app) win.app = win.discoApp;
+      return;
+    }
 
     const configFromFile = await loadConfig(configPath);
     const mergedConfig = mergeConfig(configFromFile ?? {}, options?.config);
 
     const DiscoAppCtor = await resolveDiscoAppConstructor(importPath);
     if (DiscoAppCtor) {
-      win.discoApp = new DiscoAppCtor(mergedConfig);
+      const Wrapped = wrapDiscoAppConstructor(DiscoAppCtor, mergedConfig);
+      win.DiscoApp = Wrapped;
+      setDiscoAppExport(Wrapped);
+      win.discoApp = new Wrapped();
+      win.app = win.discoApp;
     }
   }
 }

@@ -27,6 +27,14 @@
  */
 
 /**
+ * @typedef {typeof import('discoui').DiscoApp} DiscoAppInstanceConstructor
+ */
+
+/**
+ * @typedef {DiscoAppInstanceConstructor & { ready?: (cb: () => void) => void | Promise<void> }} DiscoAppConstructor
+ */
+
+/**
  * @typedef {Object} DiscoUIPlugin
  * @property {(options?: DiscoInitializeOptions) => Promise<void>} initialize
  */

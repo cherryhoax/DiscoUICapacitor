@@ -18,5 +18,5 @@
     "strict": true,
     "target": "es2017"
   },
-  "files": ["src/index.js", "src/web.js", "src/types.js"]
+  "files": ["src/index.js", "src/web.js", "src/types.js", "src/discoui-ambient.d.ts"]
 }

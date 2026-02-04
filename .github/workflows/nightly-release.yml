@@ -1,0 +1,58 @@
+name: Nightly Release
+
+on:
+  schedule:
+    - cron: "0 9 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  nightly:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 21
+          cache: npm
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Android debug APK
+        run: npm run build:android
+
+      - name: Package plugin
+        run: |
+          rm -f discoui-capacitor.zip
+          zip -r discoui-capacitor.zip dist
+
+      - name: Set metadata
+        run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV
+
+      - name: Create or Update Nightly Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: nightly
+          name: Nightly Build
+          body: |
+            **Last Updated:** ${{ github.event.repository.updated_at }}
+            **Commit:** ${{ github.sha }} (${{ env.SHORT_SHA }})
+          prerelease: true
+          files: |
+            example-app/android/app/build/outputs/apk/debug/app-debug.apk
+            discoui-capacitor.zip
