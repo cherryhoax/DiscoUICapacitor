@@ -1,14 +1,22 @@
-import { registerPlugin } from '@capacitor/core';
+import { DiscoUIPlugin } from './plugin.js';
+import { DiscoCapacitorApp } from './app.js';
 import { DiscoApp } from './exports.js';
 
 /**
  * @typedef {import('./types').DiscoUIPlugin} DiscoUIPlugin
  */
 
-export const DiscoUI = registerPlugin('DiscoUI', {
-  web: () => import('./web.js').then((m) => new m.DiscoUIWeb()),
-  electron: () => import('./web.js').then((m) => new m.DiscoUIWeb()),
-});
+// Export plugin
+export { DiscoUIPlugin };
 
+// Export DiscoCapacitorApp as primary app class
+export { DiscoCapacitorApp };
+
+// Re-export DiscoApp for backwards compatibility
 export { DiscoApp };
+
+// Re-export types
 export * from './types.js';
+
+// Re-export all discoui exports
+export * from 'discoui';

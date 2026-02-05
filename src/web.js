@@ -118,4 +118,49 @@ export class DiscoUIWeb extends WebPlugin {
       win.app = win.discoApp;
     }
   }
+
+  /**
+   * Get current window insets (safe area)
+   * @returns {Promise<{top: number, bottom: number, left: number, right: number}>}
+   */
+  async getInsets() {
+    // Web fallback - return zeros
+    return { top: 0, bottom: 0, left: 0, right: 0 };
+  }
+
+  /**
+   * Hide native splash screen
+   * @param {{fadeOutDuration?: number}} [options]
+   * @returns {Promise<void>}
+   */
+  async hideSplash(options) {
+    // Web fallback - no-op
+  }
+
+  /**
+   * Set status bar style
+   * @param {{style: 'light' | 'dark'}} options
+   * @returns {Promise<void>}
+   */
+  async setStatusBarStyle(options) {
+    // Web fallback - no-op
+  }
+
+  /**
+   * Set navigation bar style
+   * @param {{style: 'light' | 'dark'}} options
+   * @returns {Promise<void>}
+   */
+  async setNavigationBarStyle(options) {
+    // Web fallback - no-op
+  }
+
+  /**
+   * Set navigation bar color
+   * @param {{color: string}} options
+   * @returns {Promise<void>}
+   */
+  async setNavigationBarColor(options) {
+    // Web fallback - no-op
+  }
 }

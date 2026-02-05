@@ -42,11 +42,11 @@
     "prettier": "prettier \"**/*.{css,html,js,java,json}\" --plugin=prettier-plugin-java",
     "swiftlint": "node-swiftlint",
     "docgen": "docgen --api DiscoUIPlugin --output-readme README.md --output-json dist/docs.json",
-    "build": "npm run embed:css && npm run clean && npm run docgen && tsc && rollup -c rollup.config.mjs",
+    "build": "npm run embed:css && npm run clean && npm run docgen && tsc && rollup -c rollup.config.mjs && vite build",
     "build:android": "npm run build && cd example-app && npm ci && npm run build && npx cap copy android && cd android && ./gradlew assembleDebug",
     "clean": "rimraf ./dist",
     "embed:css": "node scripts/embed-css.js",
-    "watch": "tsc --watch",
+    "watch": "vite build --watch",
     "prepublishOnly": "npm run build"
   },
   "devDependencies": {
@@ -62,7 +62,8 @@
     "rimraf": "^6.1.0",
     "rollup": "^4.53.2",
     "swiftlint": "^2.0.0",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vite": "^5.4.21"
   },
   "peerDependencies": {
     "@capacitor/core": ">=8.0.0"

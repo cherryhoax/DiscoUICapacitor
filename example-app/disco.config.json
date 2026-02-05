@@ -6,6 +6,7 @@
     "mode": "manual",
     "color": "#008a00",
     "icon": "/favicon.svg",
-    "showProgress": true
+    "showProgress": true,
+    "native": true
   }
 }
