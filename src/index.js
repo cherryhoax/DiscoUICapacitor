@@ -1,6 +1,6 @@
-import { DiscoUIPlugin } from './plugin.js';
 import { DiscoCapacitorApp } from './app.js';
 import { DiscoApp } from './exports.js';
+import { DiscoUIPlugin } from './plugin.js';
 
 /**
  * @typedef {import('./types').DiscoUIPlugin} DiscoUIPlugin

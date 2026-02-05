@@ -13,7 +13,7 @@ export default defineConfig({
       output: {
         globals: {
           '@capacitor/core': 'capacitorCore',
-          'discoui': 'discoui',
+          discoui: 'discoui',
         },
       },
     },

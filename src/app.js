@@ -53,10 +53,10 @@ export class DiscoCapacitorApp extends DiscoApp {
    */
   constructor(config) {
     super(config);
-    
+
     /** @type {DiscoCapacitorAppConfig} */
     this._config = config || {};
-    
+
     /** @type {boolean} */
     this._initialized = false;
 

@@ -1,6 +1,7 @@
 import { WebPlugin } from '@capacitor/core';
-import { setDiscoAppExport } from './exports.js';
+
 import { cssContent } from './css.js';
+import { setDiscoAppExport } from './exports.js';
 
 /** @typedef {import('./types').DiscoAppOptions} DiscoAppOptions */
 /** @typedef {import('./types').DiscoInitializeOptions} DiscoInitializeOptions */
