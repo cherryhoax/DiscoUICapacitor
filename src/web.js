@@ -1,5 +1,4 @@
 import { WebPlugin } from '@capacitor/core';
-
 import { cssContent } from './css.js';
 import { setDiscoAppExport } from './exports.js';
 

@@ -222,6 +222,8 @@ public class DiscoUIPlugin extends Plugin {
                     }
                 }
             } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                // Use deprecated API for API 23-29 (Android 6.0 - 9.0)
+                // Required for backward compatibility with older Android versions
                 View decorView = window.getDecorView();
                 int flags = decorView.getSystemUiVisibility();
                 if ("light".equals(style)) {
@@ -267,6 +269,8 @@ public class DiscoUIPlugin extends Plugin {
                     }
                 }
             } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                // Use deprecated API for API 26-29 (Android 8.0 - 9.0)
+                // Required for backward compatibility with older Android versions
                 View decorView = window.getDecorView();
                 int flags = decorView.getSystemUiVisibility();
                 if ("light".equals(style)) {

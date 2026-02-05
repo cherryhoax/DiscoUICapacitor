@@ -258,6 +258,7 @@ export class DiscoCapacitorApp extends DiscoApp {
 
   /**
    * Override setTheme to sync to native
+   * Note: Native sync happens asynchronously and is not awaited
    * @param {string} theme
    */
   setTheme(theme) {
@@ -267,6 +268,7 @@ export class DiscoCapacitorApp extends DiscoApp {
 
   /**
    * Override setAccent to sync to native
+   * Note: Native sync happens asynchronously and is not awaited
    * @param {string} color
    */
   setAccent(color) {
