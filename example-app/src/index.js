@@ -191,6 +191,6 @@ const start = () => {
         app.dismissSplash();
         await new Promise((r) => setTimeout(r, 200));
         await frame.navigate(homePage);
-    }, 1000);
+    }, 10000);
 };
 DiscoApp.ready(start);

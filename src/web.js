@@ -1,6 +1,5 @@
 import { WebPlugin } from '@capacitor/core';
 import { setDiscoAppExport } from './exports.js';
-import { cssContent } from './css.js';
 
 /** @typedef {import('./types').DiscoAppOptions} DiscoAppOptions */
 /** @typedef {import('./types').DiscoInitializeOptions} DiscoInitializeOptions */
@@ -24,7 +23,6 @@ const mergeConfig = (base, overrides) => {
 const wrapDiscoAppConstructor = (DiscoAppCtor, defaultConfig) => {
   class WrappedDiscoApp extends DiscoAppCtor {
     constructor(options) {
-      ensureInlineCss();
       super(options ?? defaultConfig);
     }
   }
@@ -38,17 +36,6 @@ const wrapDiscoAppConstructor = (DiscoAppCtor, defaultConfig) => {
   }
   Object.assign(WrappedDiscoApp, DiscoAppCtor);
   return WrappedDiscoApp;
-};
-
-const ensureInlineCss = () => {
-  if (!document?.head) return;
-  if (document.querySelector('style[data-disco-style="true"]')) return;
-  if (!cssContent) return;
-
-  const style = document.createElement('style');
-  style.setAttribute('data-disco-style', 'true');
-  style.textContent = cssContent;
-  document.head.appendChild(style);
 };
 
 const resolveDiscoAppConstructor = async (importPath) => {
@@ -96,8 +83,6 @@ export class DiscoUIWeb extends WebPlugin {
   async initialize(options) {
     const importPath = options?.importPath ?? DEFAULT_IMPORT_PATH;
     const configPath = options?.configPath ?? DEFAULT_CONFIG_PATH;
-
-    ensureInlineCss();
 
     /** @type {Window & {discoApp?: unknown}} */
     const win = window;

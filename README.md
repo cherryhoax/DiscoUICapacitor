@@ -6,7 +6,7 @@
 
 ## Quick Start
 ```bash
-npm install discoui-capacitor
+npm install discouicapacitor
 npx cap sync
 ```
 
@@ -29,7 +29,7 @@ Create a disco.config.json in your app public root (for example, www/disco.confi
 
 Then create and launch the app:
 ```ts
-import { DiscoApp } from 'discoui-capacitor';
+import { DiscoApp } from 'discouicapacitor';
 
 const app = new DiscoApp();
 app.launch(document.querySelector('disco-frame'));

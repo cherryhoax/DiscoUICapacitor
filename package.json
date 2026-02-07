@@ -1,5 +1,5 @@
 {
-  "name": "discoui-capacitor",
+  "name": "discouicapacitor",
   "version": "0.0.1",
   "description": "well its disco ui. in android",
   "main": "src/index.js",
@@ -22,10 +22,10 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/cherryhoax/DiscoUI-Capacitor.git"
+    "url": "git+https://github.com/cherryhoax/DiscoUICapacitor.git"
   },
   "bugs": {
-    "url": "https://github.com/cherryhoax/DiscoUI-Capacitor/issues"
+    "url": "https://github.com/cherryhoax/DiscoUICapacitor/issues"
   },
   "keywords": [
     "capacitor",
@@ -42,10 +42,11 @@
     "prettier": "prettier \"**/*.{css,html,js,java,json}\" --plugin=prettier-plugin-java",
     "swiftlint": "node-swiftlint",
     "docgen": "docgen --api DiscoUIPlugin --output-readme README.md --output-json dist/docs.json",
-    "build": "npm run embed:css && npm run clean && npm run docgen && tsc && rollup -c rollup.config.mjs",
+    "build": "npm run clean && npm run docgen && tsc && rollup -c rollup.config.mjs",
     "build:android": "npm run build && cd example-app && npm ci && npm run build && npx cap copy android && cd android && ./gradlew assembleDebug",
+    "install:android": "npm run build:android && adb wait-for-device && adb install -r example-app/android/app/build/outputs/apk/debug/app-debug.apk",
+    "sync:local": "test -d ../DiscoUI && (cd ../DiscoUI && npm link && npm run build) && npm link discoui && npm run build || echo 'DiscoUI not found at ../DiscoUI - skipping local sync'",
     "clean": "rimraf ./dist",
-    "embed:css": "node scripts/embed-css.js",
     "watch": "tsc --watch",
     "prepublishOnly": "npm run build"
   },

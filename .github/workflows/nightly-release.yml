@@ -38,8 +38,8 @@ jobs:
 
       - name: Package plugin
         run: |
-          rm -f discoui-capacitor.zip
-          zip -r discoui-capacitor.zip dist
+          rm -f discouicapacitor.zip
+          zip -r discouicapacitor.zip dist
 
       - name: Set metadata
         run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV
@@ -55,4 +55,4 @@ jobs:
           prerelease: true
           files: |
             example-app/android/app/build/outputs/apk/debug/app-debug.apk
-            discoui-capacitor.zip
+            discouicapacitor.zip

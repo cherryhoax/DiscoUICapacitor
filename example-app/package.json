@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@capacitor/core": "latest",
-    "discoui-capacitor": "file:..",
+    "discouicapacitor": "file:..",
     "@capacitor/android": "8.0.0"
   },
   "devDependencies": {
