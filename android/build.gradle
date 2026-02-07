@@ -17,6 +17,8 @@ buildscript {
 
 apply plugin: 'com.android.library'
 
+import groovy.json.JsonSlurper
+
 android {
     namespace = "io.github.cherryhoax.discoui.capacitor"
     compileSdk = project.hasProperty('compileSdkVersion') ? rootProject.ext.compileSdkVersion : 36
@@ -40,6 +42,68 @@ android {
         sourceCompatibility JavaVersion.VERSION_21
         targetCompatibility JavaVersion.VERSION_21
     }
+
+    def generatedResDir = "$buildDir/generated/res/discoTheme"
+    sourceSets {
+        main {
+            res.srcDirs += [generatedResDir]
+        }
+    }
+
+    def discoConfigFile = new File(rootProject.projectDir, 'disco.config.json')
+    if (!discoConfigFile.exists() && rootProject.projectDir.parentFile != null) {
+        discoConfigFile = new File(rootProject.projectDir.parentFile, 'disco.config.json')
+    }
+    def discoTheme = 'auto'
+    if (discoConfigFile.exists()) {
+        try {
+            def parsed = new JsonSlurper().parse(discoConfigFile)
+            if (parsed?.theme instanceof String) {
+                discoTheme = parsed.theme
+            }
+        } catch (Exception ignored) {
+            // fall back to auto
+        }
+    }
+
+    def lightColor = '#FFFFFF'
+    def darkColor = '#000000'
+    def valuesColor = discoTheme == 'dark' ? darkColor : lightColor
+    def nightColor = discoTheme == 'light' ? lightColor : darkColor
+
+    def generateDiscoColors = tasks.register('generateDiscoColors') {
+        doLast {
+            def staticValues = new File(project.projectDir, 'src/main/res/values/colors.xml')
+            def staticValuesNight = new File(project.projectDir, 'src/main/res/values-night/colors.xml')
+            if (staticValues.exists()) staticValues.delete()
+            if (staticValuesNight.exists()) staticValuesNight.delete()
+
+            def valuesDir = new File(generatedResDir + '/values')
+            def valuesNightDir = new File(generatedResDir + '/values-night')
+            valuesDir.mkdirs()
+            valuesNightDir.mkdirs()
+
+            def valuesXml = """<?xml version=\"1.0\" encoding=\"utf-8\"?>
+<resources>
+    <color name=\"colorPrimary\">${valuesColor}</color>
+    <color name=\"colorPrimaryDark\">${valuesColor}</color>
+    <color name=\"colorAccent\">#D80073</color>
+</resources>
+"""
+            def valuesNightXml = """<?xml version=\"1.0\" encoding=\"utf-8\"?>
+<resources>
+    <color name=\"colorPrimary\">${nightColor}</color>
+    <color name=\"colorPrimaryDark\">${nightColor}</color>
+    <color name=\"colorAccent\">#D80073</color>
+</resources>
+"""
+
+            new File(valuesDir, 'colors.xml').text = valuesXml
+            new File(valuesNightDir, 'colors.xml').text = valuesNightXml
+        }
+    }
+
+    preBuild.dependsOn(generateDiscoColors)
 }
 
 repositories {
