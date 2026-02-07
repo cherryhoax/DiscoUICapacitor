@@ -36,11 +36,10 @@
     "verify": "npm run verify:android && npm run verify:web",
     "verify:android": "cd android && ./gradlew clean build test && cd ..",
     "verify:web": "npm run build",
-    "lint": "npm run eslint && npm run prettier -- --check && npm run swiftlint -- lint",
-    "fmt": "npm run eslint -- --fix && npm run prettier -- --write && npm run swiftlint -- --fix --format",
+    "lint": "npm run eslint && npm run prettier -- --check",
+    "fmt": "npm run eslint -- --fix && npm run prettier -- --write",
     "eslint": "eslint . --ext js",
     "prettier": "prettier \"**/*.{css,html,js,java,json}\" --plugin=prettier-plugin-java",
-    "swiftlint": "node-swiftlint",
     "docgen": "docgen --api DiscoUIPlugin --output-readme README.md --output-json dist/docs.json",
     "build": "npm run clean && npm run docgen && tsc && rollup -c rollup.config.mjs",
     "build:android": "npm run build && cd example-app && npm ci && npm run build && npx cap copy android && cd android && ./gradlew assembleDebug",
@@ -60,32 +59,23 @@
     "@capacitor/docgen": "^0.3.1",
     "@ionic/eslint-config": "^0.4.0",
     "@ionic/prettier-config": "^4.0.0",
-    "@ionic/swiftlint-config": "^2.0.0",
     "eslint": "^8.57.1",
     "prettier": "^3.6.2",
     "prettier-plugin-java": "^2.7.7",
     "rimraf": "^6.1.0",
     "rollup": "^4.53.2",
-    "swiftlint": "^2.0.0",
     "typescript": "^5.9.3"
   },
   "peerDependencies": {
     "@capacitor/core": ">=8.0.0"
   },
   "prettier": "@ionic/prettier-config",
-  "swiftlint": "@ionic/swiftlint-config",
   "eslintConfig": {
     "extends": "@ionic/eslint-config/recommended"
   },
   "capacitor": {
     "android": {
       "src": "android"
-    },
-    "web": {
-      "src": "src"
-    },
-    "electron": {
-      "src": "src"
     }
   },
   "dependencies": {
