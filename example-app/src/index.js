@@ -1,11 +1,14 @@
-import { DiscoApp } from '../../src/index.js';
-window.DiscoApp = DiscoApp;
-const start = () => {
-    if (!DiscoApp) {
+import { DiscoUI } from '../../src/index.js';
+
+const start = async () => {
+    // Initialize DiscoUI Capacitor plugin - bu disco.config.json'u yükler ve app instance'ı oluşturur
+    await DiscoUI.initialize();
+    
+    const app = window.app || window.discoApp;
+    if (!app) {
         console.error('[disco-ui] DiscoApp not available');
         return;
     }
-    const app = new DiscoApp();
 
     const frame = document.getElementById('componentsFrame');
     window.frame = frame;
