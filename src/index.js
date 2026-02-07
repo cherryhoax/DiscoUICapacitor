@@ -66,6 +66,38 @@ const wireInsets = () => {
   if (typeof DiscoUI.addListener === 'function') {
     DiscoUI.addListener('insetsChange', (data) => applyInsets(data));
     DiscoUI.addListener('backButton', () => handleBackButton());
+    DiscoUI.addListener('predictiveBackProgress', async (data) => {
+      const frame = window.frame;
+      const progress = data?.progress ?? 0;
+      console.debug('[DiscoUI] predictiveBackProgress', progress);
+      if (frame && typeof frame.predictiveBackProgress === 'function') {
+        await frame.predictiveBackProgress(progress);
+      }
+    });
+    DiscoUI.addListener('predictiveBackStart', () => {
+      console.debug('[DiscoUI] predictiveBackStart');
+    });
+    DiscoUI.addListener('predictiveBackCancel', async () => {
+      const frame = window.frame;
+      console.debug('[DiscoUI] predictiveBackCancel');
+      if (frame && typeof frame.predictiveBackCancel === 'function') {
+        await frame.predictiveBackCancel();
+      }
+    });
+    DiscoUI.addListener('predictiveBackCommit', async () => {
+      const frame = window.frame;
+      console.debug('[DiscoUI] predictiveBackCommit');
+      if (frame && typeof frame.predictiveBackCommit === 'function') {
+        const handled = await frame.predictiveBackCommit();
+        if (!handled && typeof DiscoUI.exitApp === 'function') {
+          await DiscoUI.exitApp();
+        }
+        return;
+      }
+      if (typeof DiscoUI.exitApp === 'function') {
+        await DiscoUI.exitApp();
+      }
+    });
     DiscoUI.addListener('appResume', async () => {
       const frame = window.frame;
       if (!frame) return;

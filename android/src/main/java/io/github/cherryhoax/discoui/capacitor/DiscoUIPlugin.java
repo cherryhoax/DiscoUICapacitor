@@ -8,6 +8,12 @@ import android.graphics.drawable.ColorDrawable;
 import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.WebView;
+import android.os.Build;
+import android.window.BackEvent;
+import android.window.OnBackAnimationCallback;
+import android.window.OnBackInvokedCallback;
+import android.window.OnBackInvokedDispatcher;
+import android.util.Log;
 import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -33,6 +39,7 @@ public class DiscoUIPlugin extends Plugin {
     @Override
     public void load() {
         super.load();
+        Log.i(TAG, "Plugin load");
         applyWindowBackgroundFromConfig();
         disableSplashExitAnimation();
         registerInsetsListener();
@@ -69,6 +76,12 @@ public class DiscoUIPlugin extends Plugin {
         Activity activity = getActivity();
         if (activity == null) return;
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            Log.i(TAG, "Back handler: predictive dispatcher only");
+            registerPredictiveBackHandler(activity);
+            return;
+        }
+
         WebView webView = getBridge().getWebView();
         if (webView != null) {
             webView.setFocusableInTouchMode(true);
@@ -87,9 +100,57 @@ public class DiscoUIPlugin extends Plugin {
         compatActivity.getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                handleOnBackPressed();
+                DiscoUIPlugin.this.handleOnBackPressed();
             }
         });
+    }
+
+    private void registerPredictiveBackHandler(Activity activity) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) return;
+        OnBackInvokedDispatcher dispatcher = activity.getOnBackInvokedDispatcher();
+        if (dispatcher == null) return;
+
+        Log.i(TAG, "Registering predictive back handler (sdk=" + Build.VERSION.SDK_INT + ")");
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            dispatcher.registerOnBackInvokedCallback(
+                OnBackInvokedDispatcher.PRIORITY_DEFAULT,
+                new OnBackAnimationCallback() {
+                    @Override
+                    public void onBackStarted(BackEvent backEvent) {
+                        notifyListeners("predictiveBackStart", new JSObject(), true);
+                    }
+
+                    @Override
+                    public void onBackProgressed(BackEvent backEvent) {
+                        JSObject payload = new JSObject();
+                        payload.put("progress", backEvent.getProgress());
+                        notifyListeners("predictiveBackProgress", payload, true);
+                    }
+
+                    @Override
+                    public void onBackCancelled() {
+                        notifyListeners("predictiveBackCancel", new JSObject(), true);
+                    }
+
+                    @Override
+                    public void onBackInvoked() {
+                        notifyListeners("predictiveBackCommit", new JSObject(), true);
+                    }
+                }
+            );
+            return;
+        }
+
+        dispatcher.registerOnBackInvokedCallback(
+            OnBackInvokedDispatcher.PRIORITY_DEFAULT,
+            new OnBackInvokedCallback() {
+                @Override
+                public void onBackInvoked() {
+                    notifyListeners("predictiveBackCommit", new JSObject(), true);
+                }
+            }
+        );
     }
 
     @PluginMethod
