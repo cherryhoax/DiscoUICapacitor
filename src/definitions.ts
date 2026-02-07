@@ -31,4 +31,5 @@ export interface DiscoInitializeOptions {
 export interface DiscoUIPlugin {
 	initialize(options?: DiscoInitializeOptions): Promise<void>;
 	getInsets(): Promise<DiscoInsets>;
+	exitApp(): Promise<void>;
 }

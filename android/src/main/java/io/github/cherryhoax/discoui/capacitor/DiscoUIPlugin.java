@@ -49,6 +49,7 @@ public class DiscoUIPlugin extends Plugin {
     protected void handleOnResume() {
         super.handleOnResume();
         applyWindowBackgroundFromConfig();
+        notifyListeners("appResume", new JSObject(), true);
     }
 
     public Boolean handleOnBackPressed() {
@@ -100,6 +101,19 @@ public class DiscoUIPlugin extends Plugin {
     public void getInsets(PluginCall call) {
         JSObject payload = getCurrentInsets();
         call.resolve(payload);
+    }
+
+    @PluginMethod
+    public void exitApp(PluginCall call) {
+        Activity activity = getActivity();
+        if (activity != null) {
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                activity.finishAndRemoveTask();
+            } else {
+                activity.finish();
+            }
+        }
+        call.resolve();
     }
 
     private void applyWindowBackgroundFromConfig() {

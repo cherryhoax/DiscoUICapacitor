@@ -46,6 +46,7 @@
  * @typedef {Object} DiscoUIPlugin
  * @property {(options?: DiscoInitializeOptions) => Promise<void>} initialize
  * @property {() => Promise<DiscoInsets>} getInsets
+ * @property {() => Promise<void>} exitApp
  */
 
 export {};

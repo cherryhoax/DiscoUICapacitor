@@ -37,4 +37,5 @@ export type DiscoAppConstructor = typeof DiscoAppValue & {
 export interface DiscoUIPlugin {
   initialize(options?: DiscoInitializeOptions): Promise<void>;
   getInsets(): Promise<DiscoInsets>;
+  exitApp(): Promise<void>;
 }
