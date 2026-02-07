@@ -42,7 +42,7 @@
     "prettier": "prettier \"**/*.{css,html,js,java,json}\" --plugin=prettier-plugin-java",
     "docgen": "docgen --api DiscoUIPlugin --output-readme README.md --output-json dist/docs.json",
     "build": "npm run clean && npm run docgen && tsc && rollup -c rollup.config.mjs",
-    "build:android": "npm run build && cd example-app && npm ci && npm run build && npx cap copy android && cd android && ./gradlew assembleDebug",
+    "build:android": "npm run build && cd example-app && npm ci && npm run build && npx cap sync android && cd android && ./gradlew assembleDebug",
     "install:android": "npm run build:android && adb wait-for-device && adb install -r example-app/android/app/build/outputs/apk/debug/app-debug.apk",
     "dev:link": "test -d ../DiscoUI && (cd ../DiscoUI && npm link && npm run build) && npm link discoui && npm run build && echo '✓ Linked to local DiscoUI' || echo '✗ DiscoUI not found at ../DiscoUI'",
     "dev:unlink": "npm unlink discoui && npm install && echo '✓ Unlinked from local DiscoUI'",
