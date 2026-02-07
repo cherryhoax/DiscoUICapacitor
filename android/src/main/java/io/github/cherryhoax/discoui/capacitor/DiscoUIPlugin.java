@@ -5,7 +5,11 @@ import android.content.res.AssetManager;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.view.KeyEvent;
 import android.view.View;
+import android.webkit.WebView;
+import androidx.activity.OnBackPressedCallback;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.splashscreen.SplashScreen;
 import androidx.core.splashscreen.SplashScreenViewProvider;
@@ -32,6 +36,7 @@ public class DiscoUIPlugin extends Plugin {
         applyWindowBackgroundFromConfig();
         disableSplashExitAnimation();
         registerInsetsListener();
+        registerBackHandler();
     }
 
     @Override
@@ -44,6 +49,46 @@ public class DiscoUIPlugin extends Plugin {
     protected void handleOnResume() {
         super.handleOnResume();
         applyWindowBackgroundFromConfig();
+    }
+
+    public Boolean handleOnBackPressed() {
+        WebView webView = getBridge().getWebView();
+        if (webView != null && webView.canGoBack()) {
+            webView.goBack();
+            return true;
+        }
+
+        JSObject payload = new JSObject();
+        notifyListeners("backButton", payload, true);
+        // Consume back press to prevent app exit by default.
+        return true;
+    }
+
+    private void registerBackHandler() {
+        Activity activity = getActivity();
+        if (activity == null) return;
+
+        WebView webView = getBridge().getWebView();
+        if (webView != null) {
+            webView.setFocusableInTouchMode(true);
+            webView.requestFocus();
+            webView.setOnKeyListener((v, keyCode, event) -> {
+                if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP) {
+                    handleOnBackPressed();
+                    return true;
+                }
+                return false;
+            });
+        }
+
+        if (!(activity instanceof AppCompatActivity)) return;
+        AppCompatActivity compatActivity = (AppCompatActivity) activity;
+        compatActivity.getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                handleOnBackPressed();
+            }
+        });
     }
 
     @PluginMethod

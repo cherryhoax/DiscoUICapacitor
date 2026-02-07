@@ -39,8 +39,17 @@ const wireInsets = () => {
     }
   };
 
+  const handleBackButton = () => {
+    const frame = window.frame;
+    if (frame && typeof frame.goBack === 'function') {
+      frame.goBack();
+      return;
+    }
+  };
+
   if (typeof DiscoUI.addListener === 'function') {
     DiscoUI.addListener('insetsChange', (data) => applyInsets(data));
+    DiscoUI.addListener('backButton', () => handleBackButton());
   }
   if (typeof DiscoUI.getInsets === 'function') {
     DiscoUI.getInsets().then(applyInsets).catch(() => {});
