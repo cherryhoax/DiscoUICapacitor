@@ -1,11 +1,11 @@
 {
   "theme": "dark",
-  "accent": "#D80073",
+  "accent": "#aa00ff",
   "font": "SegoeUI",
   "splash": {
     "mode": "manual",
-    "color": "#008a00",
-    "icon": "/favicon.svg",
+    "color": "#aa00ff",
+    "icon": "/duic.svg",
     "showProgress": true
   }
 }

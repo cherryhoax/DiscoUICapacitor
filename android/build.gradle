@@ -71,6 +71,42 @@ android {
     def valuesColor = discoTheme == 'dark' ? darkColor : lightColor
     def nightColor = discoTheme == 'light' ? lightColor : darkColor
 
+    def copyDiscoConfigToAssets = tasks.register('copyDiscoConfigToAssets') {
+        doLast {
+            if (!discoConfigFile.exists()) return
+            def appAssetsDir = new File(rootProject.projectDir, 'app/src/main/assets/public')
+            if (!appAssetsDir.exists()) appAssetsDir.mkdirs()
+            def target = new File(appAssetsDir, 'disco.config.json')
+            target.text = discoConfigFile.text
+
+            try {
+                def parsed = new JsonSlurper().parse(discoConfigFile)
+                def iconPaths = []
+                if (parsed?.icon instanceof String) iconPaths.add(parsed.icon)
+                if (parsed?.splash?.icon instanceof String) iconPaths.add(parsed.splash.icon)
+
+                iconPaths.findAll { it != null && it.toString().trim().length() > 0 }.each { rawPath ->
+                    def relPath = rawPath.toString().trim()
+                    if (relPath.startsWith('/')) relPath = relPath.substring(1)
+
+                    def appRoot = rootProject.projectDir.parentFile
+                    def publicPath = new File(appRoot, 'public/' + relPath)
+                    def directPath = new File(appRoot, relPath)
+                    def sourceFile = publicPath.exists() ? publicPath : directPath
+                    if (!sourceFile.exists()) return
+
+                    def destFile = new File(appAssetsDir, relPath)
+                    if (destFile.parentFile != null && !destFile.parentFile.exists()) {
+                        destFile.parentFile.mkdirs()
+                    }
+                    destFile.bytes = sourceFile.bytes
+                }
+            } catch (Exception ignored) {
+                // ignore asset copy failures
+            }
+        }
+    }
+
     def generateDiscoColors = tasks.register('generateDiscoColors') {
         doLast {
             def staticValues = new File(project.projectDir, 'src/main/res/values/colors.xml')
@@ -103,6 +139,7 @@ android {
         }
     }
 
+    preBuild.dependsOn(copyDiscoConfigToAssets)
     preBuild.dependsOn(generateDiscoColors)
 }
 
@@ -116,6 +153,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(':capacitor-android')
     implementation "androidx.appcompat:appcompat:$androidxAppCompatVersion"
+    implementation "androidx.core:core-splashscreen:1.0.1"
     testImplementation "junit:junit:$junitVersion"
     androidTestImplementation "androidx.test.ext:junit:$androidxJunitVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"

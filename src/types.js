@@ -11,6 +11,14 @@
  */
 
 /**
+ * @typedef {Object} DiscoInsets
+ * @property {number} top
+ * @property {number} right
+ * @property {number} bottom
+ * @property {number} left
+ */
+
+/**
  * @typedef {Object} DiscoAppOptions
  * @property {string} [theme]
  * @property {string} [accent]
@@ -37,6 +45,7 @@
 /**
  * @typedef {Object} DiscoUIPlugin
  * @property {(options?: DiscoInitializeOptions) => Promise<void>} initialize
+ * @property {() => Promise<DiscoInsets>} getInsets
  */
 
 export {};

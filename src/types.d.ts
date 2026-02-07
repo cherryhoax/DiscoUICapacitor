@@ -7,6 +7,13 @@ export interface DiscoSplashOptions {
   showProgress?: boolean;
 }
 
+export interface DiscoInsets {
+  top: number;
+  right: number;
+  bottom: number;
+  left: number;
+}
+
 export interface DiscoAppOptions {
   theme?: string;
   accent?: string;
@@ -29,4 +36,5 @@ export type DiscoAppConstructor = typeof DiscoAppValue & {
 
 export interface DiscoUIPlugin {
   initialize(options?: DiscoInitializeOptions): Promise<void>;
+  getInsets(): Promise<DiscoInsets>;
 }
