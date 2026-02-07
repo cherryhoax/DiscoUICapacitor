@@ -1,4 +1,4 @@
-import { DiscoApp } from '../../src/index.js';
+import { DiscoApp } from 'discouicapacitor';
 
 const start = async () => {
     // Initialize DiscoUI Capacitor plugin - bu disco.config.json'u yükler ve app instance'ı oluşturur
@@ -188,11 +188,11 @@ const start = async () => {
 
     app.launch(frame);
 
-    app.setupSplash();
+    // Simulate manual splash loading (1s - 6s)
+    //app.setupSplash();
     setTimeout(async () => {
-        app.dismissSplash();
-        await new Promise((r) => setTimeout(r, 200));
-        await frame.navigate(homePage);
-    }, 10000);
+        await app.dismissSplash();
+        frame.navigate(homePage);
+    }, 1000);
 };
 DiscoApp.ready(start);

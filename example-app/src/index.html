@@ -6,6 +6,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Disco Components</title>
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <style>
+    /* Critical preload styles to prevent frame flash */
+    disco-frame {
+      display: none;
+    }
+    disco-frame[disco-launched] {
+      display: flex;
+    }
+  </style>
 </head>
 
 <body>

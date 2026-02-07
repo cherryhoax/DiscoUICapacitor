@@ -77,7 +77,7 @@ class DiscoApp extends BaseDiscoApp {
 }
 
 /** @type {import('./types').DiscoAppConstructor | undefined} */
-export let DiscoApp = DiscoApp;
+export { DiscoApp };
 
 /**
  * @param {import('./types').DiscoAppConstructor | undefined} ctor

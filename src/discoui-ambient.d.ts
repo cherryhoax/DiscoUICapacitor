@@ -1,3 +1,9 @@
 declare module 'discoui' {
-  export { default as DiscoApp, DiscoAppDelegate } from 'discoui/src/components/disco-app.js';
+  export class DiscoApp {
+    constructor(config?: any);
+    launch(frame: HTMLElement): void;
+    dismissSplash(): Promise<void>;
+    setupSplash(): void;
+  }
+  export class DiscoAppDelegate {}
 }
