@@ -16,7 +16,7 @@ npx cap sync
 
 ## Related
 
-- [DiscoUI](../DiscoUI/README.md) - Core Web Components and UI library.
+- [DiscoUI](https://github.com/cherryhoax/DiscoUI?tab=readme-ov-file) - Core Web Components and UI library.
 
 ## Usage
 Create a disco.config.json in your app public root (for example, www/disco.config.json):
