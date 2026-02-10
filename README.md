@@ -10,6 +10,10 @@ npm install discouicapacitor
 npx cap sync
 ```
 
+## Documentation
+
+- [Docs](docs/index.md)
+
 ## Usage
 Create a disco.config.json in your app public root (for example, www/disco.config.json):
 
