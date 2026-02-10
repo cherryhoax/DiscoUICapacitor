@@ -364,7 +364,21 @@ const updateAndroidBuildGradle = (buildGradlePath) => {
   if (!content.includes('signingConfigs')) {
     content = content.replace(
       /defaultConfig\s*\{([\s\S]*?)\n\s*\}/,
-      (match) => `${match}\n\n    signingConfigs {\n        release {\n            if (keystorePropertiesFile.exists()) {\n                storeFile file("keystore/\\${keystoreProperties['storeFile']}")\n                storePassword \\${keystoreProperties['storePassword']}\n                keyAlias \\${keystoreProperties['keyAlias']}\n                keyPassword \\${keystoreProperties['keyPassword']}\n            }\n        }\n    }`
+      (match) =>
+        [
+          match,
+          '',
+          '    signingConfigs {',
+          '        release {',
+          '            if (keystorePropertiesFile.exists()) {',
+          '                storeFile file("keystore/${keystoreProperties[\'storeFile\']}")',
+          '                storePassword ${keystoreProperties[\'storePassword\']}',
+          '                keyAlias ${keystoreProperties[\'keyAlias\']}',
+          '                keyPassword ${keystoreProperties[\'keyPassword\']}',
+          '            }',
+          '        }',
+          '    }'
+        ].join('\n')
     );
   }
 
