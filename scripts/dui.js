@@ -3,6 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 const readline = require('readline');
+const crypto = require('crypto');
 const { execSync } = require('child_process');
 
 const colors = {
@@ -23,6 +24,9 @@ const log = {
   err: (msg) => console.error(`${colors.red}${msg}${colors.reset}`)
 };
 
+const THEME_OPTIONS = ['auto', 'dark', 'light'];
+const PAGE_OPTIONS = ['page', 'single page', 'pivot', 'hub', 'single page + list view'];
+
 const slugify = (value) =>
   String(value || '')
     .trim()
@@ -39,12 +43,19 @@ const writeFile = (filePath, content) => {
   fs.writeFileSync(filePath, content, 'utf8');
 };
 
+const appendFileIfMissing = (filePath, content) => {
+  if (fs.existsSync(filePath)) return;
+  writeFile(filePath, content);
+};
+
 const copyIfExists = (fromPath, toPath) => {
   if (!fs.existsSync(fromPath)) return false;
   ensureDir(path.dirname(toPath));
   fs.copyFileSync(fromPath, toPath);
   return true;
 };
+
+const randomSecret = () => crypto.randomBytes(18).toString('hex');
 
 const question = (rl, text, def) =>
   new Promise((resolve) => {
@@ -65,9 +76,6 @@ const pick = async (rl, text, options, defIndex = 0) => {
   const idx = Math.min(options.length - 1, Math.max(0, Number(answer) - 1));
   return options[idx];
 };
-
-const THEME_OPTIONS = ['auto', 'dark', 'light'];
-const PAGE_OPTIONS = ['page', 'single page', 'pivot', 'hub', 'single page + list view'];
 
 const normalizeTheme = (value) => {
   if (!value) return null;
@@ -114,7 +122,14 @@ const parseArgs = (args) => {
         idx += 1;
       }
 
-      parsed[key] = value !== undefined ? value : true;
+      if (key === 'signing') {
+        parsed.signing = true;
+      } else if (key === 'no-signing') {
+        parsed.signing = false;
+      } else {
+        parsed[key] = value !== undefined ? value : true;
+      }
+
       idx += 1;
       continue;
     }
@@ -157,6 +172,31 @@ const parseArgs = (args) => {
         idx += 2;
         continue;
       }
+      if (arg === '-D' && idx + 1 < args.length) {
+        parsed.description = args[idx + 1];
+        idx += 2;
+        continue;
+      }
+      if (arg === '-o' && idx + 1 < args.length) {
+        parsed['git-remote'] = args[idx + 1];
+        idx += 2;
+        continue;
+      }
+      if (arg === '-s') {
+        parsed.signing = true;
+        idx += 1;
+        continue;
+      }
+      if (arg === '-r') {
+        parsed['apk-action'] = true;
+        idx += 1;
+        continue;
+      }
+      if (arg === '-g') {
+        parsed['git-init'] = true;
+        idx += 1;
+        continue;
+      }
       idx += 1;
       continue;
     }
@@ -182,8 +222,14 @@ const usage = () => {
   console.log('  --theme <theme>        auto | dark | light');
   console.log('  --icon <path>          Icon file path');
   console.log('  --page <template>      page | single page | pivot | hub | single page + list view');
+  console.log('  --description <text>   README description');
   console.log('  --yes                  Unattended (use defaults for missing values)');
   console.log('  --no-install           Skip npm install and cap sync');
+  console.log('  --signing              Generate Android signing config');
+  console.log('  --no-signing           Skip Android signing config');
+  console.log('  --apk-action           Add GitHub Actions Android release workflow');
+  console.log('  --git-init             Initialize git and create initial commit');
+  console.log('  --git-remote <url>     Add remote and push initial commit');
   console.log('  -h, --help             Show help');
   console.log('');
 };
@@ -199,10 +245,253 @@ const createAppUsage = () => {
   console.log('  -t, --theme <theme>     auto | dark | light');
   console.log('  -I, --icon <path>       Icon file path');
   console.log('  -p, --page <template>   page | single page | pivot | hub | single page + list view');
+  console.log('  -D, --description <t>   README description');
+  console.log('  -o, --git-remote <url>  Add remote and push initial commit');
   console.log('  -y, --yes               Unattended (use defaults for missing values)');
   console.log('      --no-install        Skip npm install and cap sync');
+  console.log('  -s, --signing           Generate Android signing config');
+  console.log('      --no-signing        Skip Android signing config');
+  console.log('  -r, --apk-action        Add GitHub Actions Android release workflow');
+  console.log('  -g, --git-init          Initialize git and create initial commit');
   console.log('  -h, --help              Show help');
   console.log('');
+};
+
+const createReadme = ({
+  targetPath,
+  appName,
+  description,
+  appId,
+  theme,
+  accent,
+  firstPage,
+  apkAction
+}) => {
+  const lines = [
+    `# ${appName}`,
+    '',
+    description,
+    '',
+    '## Package',
+    '',
+    `- App Id: ${appId}`,
+    `- Theme: ${theme}`,
+    `- Accent: ${accent}`,
+    `- Template: ${firstPage}`,
+    '',
+    '## Quick Start',
+    '',
+    '```bash',
+    'npm install',
+    'npm run start',
+    '```',
+    '',
+    '## Build',
+    '',
+    '```bash',
+    'npm run build',
+    'npx cap sync android',
+    '```',
+    '',
+    '## Android Signing',
+    '',
+    'If you enabled signing, your keystore lives in `android/keystore` and is ignored by git.',
+    'Keep it safe and provide secrets in CI before building a release APK.'
+  ];
+
+  if (apkAction) {
+    lines.push(
+      '',
+      '## GitHub Actions',
+      '',
+      'The workflow expects these secrets:',
+      '',
+      '- ANDROID_KEYSTORE_BASE64',
+      '- ANDROID_KEYSTORE_PASSWORD',
+      '- ANDROID_KEY_ALIAS',
+      '- ANDROID_KEY_PASSWORD',
+      '',
+      'To generate the base64 value:',
+      '',
+      '```bash',
+      'base64 -i android/keystore/release.keystore | pbcopy',
+      '```'
+    );
+  }
+
+  writeFile(path.join(targetPath, 'README.md'), `${lines.join('\n')}\n`);
+};
+
+const createGitIgnore = (targetPath) => {
+  const content = [
+    'node_modules/',
+    'dist/',
+    '.env',
+    '.env.local',
+    '.DS_Store',
+    'android/keystore/',
+    'android/keystore/*.properties',
+    'android/app/build/'
+  ].join('\n');
+  appendFileIfMissing(path.join(targetPath, '.gitignore'), `${content}\n`);
+};
+
+const ensureAndroidPlatform = (targetPath) => {
+  const androidPath = path.join(targetPath, 'android');
+  if (fs.existsSync(androidPath)) return;
+
+  log.info('Adding Android platform...');
+  execSync('npx cap add android', { cwd: targetPath, stdio: 'inherit' });
+};
+
+const updateAndroidBuildGradle = (buildGradlePath) => {
+  if (!fs.existsSync(buildGradlePath)) return false;
+
+  let content = fs.readFileSync(buildGradlePath, 'utf8');
+
+  if (!content.includes('keystoreProperties')) {
+    const importBlock = 'import java.util.Properties\nimport java.io.FileInputStream\n';
+    if (!content.includes('import java.util.Properties')) {
+      content = importBlock + content;
+    }
+
+    content = content.replace(
+      /android\s*\{/, 
+      `android {\n    def keystoreProperties = new Properties()\n    def keystorePropertiesFile = rootProject.file("keystore/release.properties")\n    if (keystorePropertiesFile.exists()) {\n        keystoreProperties.load(new FileInputStream(keystorePropertiesFile))\n    }`
+    );
+  }
+
+  if (!content.includes('signingConfigs')) {
+    content = content.replace(
+      /defaultConfig\s*\{([\s\S]*?)\n\s*\}/,
+      (match) => `${match}\n\n    signingConfigs {\n        release {\n            if (keystorePropertiesFile.exists()) {\n                storeFile file("keystore/\\${keystoreProperties['storeFile']}")\n                storePassword \\${keystoreProperties['storePassword']}\n                keyAlias \\${keystoreProperties['keyAlias']}\n                keyPassword \\${keystoreProperties['keyPassword']}\n            }\n        }\n    }`
+    );
+  }
+
+  if (!content.includes('signingConfig signingConfigs.release')) {
+    content = content.replace(
+      /buildTypes\s*\{([\s\S]*?)release\s*\{([\s\S]*?)\n\s*\}/,
+      (match) => match.replace(/release\s*\{/, 'release {\n            signingConfig signingConfigs.release')
+    );
+  }
+
+  fs.writeFileSync(buildGradlePath, content, 'utf8');
+  return true;
+};
+
+const generateAndroidSigning = (targetPath, appName, appId) => {
+  const androidPath = path.join(targetPath, 'android');
+  if (!fs.existsSync(androidPath)) {
+    log.warn('Android platform not found. Signing skipped.');
+    return;
+  }
+
+  const keystoreDir = path.join(androidPath, 'keystore');
+  ensureDir(keystoreDir);
+
+  const keyAlias = slugify(appId || appName || 'disco-app');
+  const storePassword = randomSecret();
+  const keyPassword = randomSecret();
+  const keystoreFile = path.join(keystoreDir, 'release.keystore');
+  const propertiesFile = path.join(keystoreDir, 'release.properties');
+
+  if (!fs.existsSync(keystoreFile)) {
+    try {
+      const dname = `CN=${appName || 'Disco App'}, OU=DiscoUI, O=DiscoUI, L=Istanbul, S=Istanbul, C=TR`;
+      execSync(
+        `keytool -genkeypair -v -keystore "${keystoreFile}" -alias "${keyAlias}" -keyalg RSA -keysize 2048 -validity 10000 -storepass "${storePassword}" -keypass "${keyPassword}" -dname "${dname}"`,
+        { stdio: 'inherit' }
+      );
+    } catch (err) {
+      log.warn('Keytool not available. Skipping keystore generation.');
+      return;
+    }
+  }
+
+  const props = `storeFile=release.keystore\nstorePassword=${storePassword}\nkeyAlias=${keyAlias}\nkeyPassword=${keyPassword}\n`;
+  writeFile(propertiesFile, props);
+
+  const buildGradlePath = path.join(androidPath, 'app', 'build.gradle');
+  if (!updateAndroidBuildGradle(buildGradlePath)) {
+    log.warn('Could not update Android build.gradle for signing.');
+    return;
+  }
+
+  log.ok('Android signing configured. Keystore saved under android/keystore.');
+};
+
+const createAndroidReleaseWorkflow = (targetPath) => {
+  const workflowPath = path.join(targetPath, '.github', 'workflows', 'android-release.yml');
+  const content = [
+    'name: Android Release',
+    '',
+    'on:',
+    '  workflow_dispatch: {}',
+    '  push:',
+    "    tags:",
+    "      - 'v*.*.*'",
+    '',
+    'jobs:',
+    '  build:',
+    '    runs-on: ubuntu-latest',
+    '    steps:',
+    '      - uses: actions/checkout@v4',
+    '      - uses: actions/setup-node@v4',
+    '        with:',
+    "          node-version: '20'",
+    "          cache: 'npm'",
+    '      - name: Install dependencies',
+    '        run: npm install',
+    '      - name: Build web',
+    '        run: npm run build',
+    '      - name: Sync Capacitor',
+    '        run: npx cap sync android',
+    '      - uses: actions/setup-java@v4',
+    '        with:',
+    "          distribution: 'temurin'",
+    "          java-version: '17'",
+    '      - name: Decode keystore',
+    '        env:',
+    '          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}',
+    '          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}',
+    '          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}',
+    '          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}',
+    '        run: |',
+    '          mkdir -p android/keystore',
+    '          echo "$ANDROID_KEYSTORE_BASE64" | base64 --decode > android/keystore/release.keystore',
+    '          cat > android/keystore/release.properties <<EOF',
+    '          storeFile=release.keystore',
+    '          storePassword=$ANDROID_KEYSTORE_PASSWORD',
+    '          keyAlias=$ANDROID_KEY_ALIAS',
+    '          keyPassword=$ANDROID_KEY_PASSWORD',
+    '          EOF',
+    '      - name: Build release APK',
+    '        run: cd android && ./gradlew assembleRelease',
+    '      - uses: actions/upload-artifact@v4',
+    '        with:',
+    '          name: app-release',
+    '          path: android/app/build/outputs/apk/release/app-release.apk'
+  ].join('\n');
+
+  writeFile(workflowPath, `${content}\n`);
+};
+
+const initGitRepo = (targetPath, gitRemote) => {
+  try {
+    execSync('git init', { cwd: targetPath, stdio: 'ignore' });
+    execSync('git add .', { cwd: targetPath, stdio: 'ignore' });
+    execSync('git commit -m "Initial commit"', { cwd: targetPath, stdio: 'ignore' });
+    execSync('git branch -M main', { cwd: targetPath, stdio: 'ignore' });
+
+    if (gitRemote) {
+      execSync(`git remote add origin ${gitRemote}`, { cwd: targetPath, stdio: 'ignore' });
+      execSync('git push -u origin main', { cwd: targetPath, stdio: 'inherit' });
+    }
+
+    log.ok('Git repository initialized with initial commit.');
+  } catch (err) {
+    log.warn('Git init failed. You can run it manually.');
+  }
 };
 
 const createApp = async (options) => {
@@ -224,6 +513,7 @@ const createApp = async (options) => {
   let appName = baseName;
   let targetDir = options.targetDir;
   let appId = options.appId;
+  let description = options.description || 'DiscoUI Capacitor app';
   let accent = options.accent || '#D80073';
   let theme = providedTheme || 'auto';
   let iconPathInput = options.iconPath || '';
@@ -237,6 +527,7 @@ const createApp = async (options) => {
     targetDir = targetDir || (await question(rl, 'Directory', defaultDir));
     appId = await question(rl, 'App id', appId || `com.disco.${slugify(appName)}`);
     accent = await question(rl, 'Accent color', accent);
+    description = await question(rl, 'Description', description);
 
     if (options.theme) {
       theme = providedTheme;
@@ -263,8 +554,6 @@ const createApp = async (options) => {
     appName = baseName;
     targetDir = targetDir || slugify(appName);
     appId = appId || `com.disco.${slugify(appName)}`;
-    theme = theme || 'auto';
-    firstPage = firstPage || 'single page';
   }
 
   const targetPath = path.resolve(process.cwd(), targetDir);
@@ -320,7 +609,7 @@ const createApp = async (options) => {
   const packageJson = {
     name: slugify(appName),
     version: '0.0.1',
-    description: 'DiscoUI Capacitor app',
+    description: description,
     type: 'module',
     scripts: {
       start: 'vite',
@@ -331,10 +620,11 @@ const createApp = async (options) => {
     dependencies: {
       '@capacitor/core': 'latest',
       '@capacitor/android': '8.0.0',
-      discouicapacitor: 'latest'
+      discouicapacitor: 'github:cherryhoax/DiscoUI#path:DiscoUICapacitor'
     },
     devDependencies: {
       '@capacitor/cli': 'latest',
+      less: '^4.2.0',
       vite: '^5.4.2'
     }
   };
@@ -365,10 +655,32 @@ const createApp = async (options) => {
 
   writeFile(path.join(srcDir, 'index.js'), js);
 
+  createGitIgnore(targetPath);
+  createReadme({
+    targetPath,
+    appName,
+    description,
+    appId,
+    theme,
+    accent,
+    firstPage,
+    apkAction: options.apkAction
+  });
+
   log.ok(`Project created at ${targetPath}`);
 
   if (options.noInstall) {
     log.warn('Skipping dependency install (--no-install).');
+    if (options.signing) {
+      log.warn('Signing skipped because dependencies were not installed.');
+    }
+    if (options.apkAction) {
+      createAndroidReleaseWorkflow(targetPath);
+      log.ok('GitHub Actions workflow added for Android release.');
+    }
+    if (options.gitInit) {
+      initGitRepo(targetPath, options.gitRemote);
+    }
     log.ok('Done.');
     log.info(`Next: cd ${targetDir} && npm install && npx cap sync`);
     return;
@@ -378,13 +690,31 @@ const createApp = async (options) => {
 
   try {
     execSync('npm install', { cwd: targetPath, stdio: 'inherit' });
+    if (options.signing || options.apkAction) {
+      ensureAndroidPlatform(targetPath);
+    }
+    execSync('npm run build', { cwd: targetPath, stdio: 'inherit' });
     execSync('npx cap sync', { cwd: targetPath, stdio: 'inherit' });
   } catch (err) {
     log.err('Install failed. You can run these manually:');
     log.err(`  cd ${targetDir}`);
     log.err('  npm install');
+    log.err('  npm run build');
     log.err('  npx cap sync');
     process.exit(1);
+  }
+
+  if (options.signing) {
+    generateAndroidSigning(targetPath, appName, appId);
+  }
+
+  if (options.apkAction) {
+    createAndroidReleaseWorkflow(targetPath);
+    log.ok('GitHub Actions workflow added for Android release.');
+  }
+
+  if (options.gitInit) {
+    initGitRepo(targetPath, options.gitRemote);
   }
 
   log.ok('Done.');
@@ -415,8 +745,13 @@ const main = async () => {
       theme: parsed.theme,
       iconPath: parsed.icon,
       firstPage: parsed.page,
+      description: parsed.description,
       unattended: Boolean(parsed.yes),
-      noInstall: Boolean(parsed['no-install'])
+      noInstall: Boolean(parsed['no-install']),
+      signing: parsed.signing !== false,
+      apkAction: Boolean(parsed['apk-action']),
+      gitInit: Boolean(parsed['git-init']),
+      gitRemote: parsed['git-remote']
     };
 
     await createApp(options);

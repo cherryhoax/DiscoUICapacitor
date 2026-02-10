@@ -33,6 +33,10 @@ npx discouicapacitor create-app \
 	--accent "#D80073" \
 	--page "single page" \
 	--icon ./icon.svg \
+	--description "DiscoUI Capacitor app" \
+	--signing \
+	--apk-action \
+	--git-init \
 	--yes \
 	--no-install
 ```

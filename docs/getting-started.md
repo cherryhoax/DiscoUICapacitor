@@ -32,11 +32,16 @@ npx discouicapacitor create-app \
   --accent "#D80073" \
   --page "single page" \
   --icon ./icon.svg \
+  --description "DiscoUI Capacitor app" \
+  --signing \
+  --apk-action \
+  --git-init \
   --yes \
   --no-install
 ```
 
 Use `--yes` to skip prompts and accept defaults for missing values.
+Use `--no-signing` if you want to skip Android signing setup.
 
 ## Minimal Usage
 
