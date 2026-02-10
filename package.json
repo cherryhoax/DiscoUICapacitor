@@ -12,11 +12,16 @@
       "import": "./src/index.js"
     }
   },
+  "bin": {
+    "dui": "scripts/dui.js",
+    "discouicapacitor": "scripts/dui.js"
+  },
   "files": [
     "android/src/main/",
     "android/build.gradle",
     "dist/",
-    "src/"
+    "src/",
+    "scripts/"
   ],
   "author": "cherryhoax",
   "license": "MIT",

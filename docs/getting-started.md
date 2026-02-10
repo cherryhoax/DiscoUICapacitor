@@ -7,6 +7,37 @@ npm install discouicapacitor
 npx cap sync
 ```
 
+## Create App (CLI)
+
+```bash
+npx discouicapacitor create-app
+```
+
+If you install the package globally, you can also use:
+
+```bash
+dui create-app
+```
+
+The CLI will prompt for app name, icon, theme, accent color, and a starter page template.
+
+You can also run unattended with flags:
+
+```bash
+npx discouicapacitor create-app \
+  --name "Disco App" \
+  --dir disco-app \
+  --app-id com.disco.app \
+  --theme auto \
+  --accent "#D80073" \
+  --page "single page" \
+  --icon ./icon.svg \
+  --yes \
+  --no-install
+```
+
+Use `--yes` to skip prompts and accept defaults for missing values.
+
 ## Minimal Usage
 
 ```ts

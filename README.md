@@ -10,6 +10,33 @@ npm install discouicapacitor
 npx cap sync
 ```
 
+## Create App (CLI)
+
+```bash
+npx discouicapacitor create-app
+```
+
+If you install the package globally:
+
+```bash
+dui create-app
+```
+
+Unattended example:
+
+```bash
+npx discouicapacitor create-app \
+	--name "Disco App" \
+	--dir disco-app \
+	--app-id com.disco.app \
+	--theme auto \
+	--accent "#D80073" \
+	--page "single page" \
+	--icon ./icon.svg \
+	--yes \
+	--no-install
+```
+
 ## Documentation
 
 - [Docs](docs/index.md)
