@@ -1,0 +1,80 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          registry-url: 'https://registry.npmjs.org'
+          cache: npm
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build plugin
+        run: npm run build
+
+      - name: Build Android example APK
+        run: npm run build:android
+
+      - name: Publish to NPM
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Package plugin
+        run: |
+          zip -r discouicapacitor-${{ github.ref_name }}.zip dist src android/src android/build.gradle
+
+      - name: Get version from tag
+        id: get_version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: DiscoUI Capacitor v${{ steps.get_version.outputs.VERSION }}
+          body: |
+            ## DiscoUI Capacitor Release v${{ steps.get_version.outputs.VERSION }}
+            
+            **Published to NPM:** https://www.npmjs.com/package/discouicapacitor
+            
+            ### Installation
+            ```bash
+            npm install discouicapacitor@${{ steps.get_version.outputs.VERSION }}
+            ```
+            
+            ### Example Android APK
+            The debug APK for the example app is included in this release.
+            
+            ### Changes
+            See the [CHANGELOG](https://github.com/${{ github.repository }}/blob/main/CHANGELOG.md) for details.
+          files: |
+            discouicapacitor-${{ github.ref_name }}.zip
+            example-app/android/app/build/outputs/apk/debug/app-debug.apk
+          draft: false
+          prerelease: false

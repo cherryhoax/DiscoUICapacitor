@@ -1,6 +1,6 @@
 {
   "name": "discouicapacitor",
-  "version": "0.0.1",
+  "version": "0.5.0",
   "description": "well its disco ui. in android",
   "main": "src/index.js",
   "module": "src/index.js",
@@ -56,7 +56,13 @@
     "clean": "rimraf ./dist",
     "watch": "tsc --watch",
     "postinstall": "test -d ../DiscoUI && test \"$NODE_ENV\" != \"production\" && npm run dev:link --silent || true",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "version:patch": "npm version patch -m 'chore: release v%s'",
+    "version:minor": "npm version minor -m 'chore: release v%s'",
+    "version:major": "npm version major -m 'chore: release v%s'",
+    "release:patch": "npm run version:patch && git push && git push --tags",
+    "release:minor": "npm run version:minor && git push && git push --tags",
+    "release:major": "npm run version:major && git push && git push --tags"
   },
   "devDependencies": {
     "@capacitor/android": "^8.0.0",
