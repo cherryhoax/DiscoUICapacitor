@@ -1,5 +1,5 @@
 {
-  "name": "discouicapacitor",
+  "name": "@cherryhoax/discouicapacitor",
   "version": "0.5.0",
   "description": "well its disco ui. in android",
   "main": "src/index.js",
@@ -90,6 +90,6 @@
     }
   },
   "dependencies": {
-    "discoui": "github:cherryhoax/DiscoUI"
+    "@cherryhoax/discoui": "^0.5.0"
   }
 }

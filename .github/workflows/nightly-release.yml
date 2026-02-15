@@ -33,6 +33,13 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Build DiscoUI dependency
+        run: |
+          cd node_modules/discoui
+          npm install
+          npm run build
+          cd ../..
+
       - name: Build Android debug APK
         run: npm run build:android
 
