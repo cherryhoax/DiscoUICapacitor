@@ -27,7 +27,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/cherryhoax/DiscoUICapacitor.git"
+    "url": "https://github.com/cherryhoax/DiscoUICapacitor.git"
   },
   "bugs": {
     "url": "https://github.com/cherryhoax/DiscoUICapacitor/issues"

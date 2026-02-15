@@ -35,10 +35,10 @@ jobs:
 
       - name: Build DiscoUI dependency
         run: |
-          cd node_modules/discoui
+          cd node_modules/@cherryhoax/discoui
           npm install
           npm run build
-          cd ../..
+          cd ../../..
 
       - name: Build Android debug APK
         run: npm run build:android
