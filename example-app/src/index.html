@@ -2,333 +2,770 @@
 <html lang="en" disco-theme="dark" disco-accent="#D80073">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Disco Components</title>
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-  <style>
-    /* Critical preload styles to prevent frame flash */
-    disco-frame {
-      display: none;
-    }
-    disco-frame[disco-launched] {
-      display: flex;
-    }
-  </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Disco Components</title>
+    <link rel="stylesheet" href="./dist/discoui.css" />
+    <link rel="stylesheet" href="https://cdn.metroui.org.ua/v5/css/metro-icons.min.css">
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
 </head>
 
 <body>
-  <disco-frame id="componentsFrame">
-    <disco-single-page id="componentsHome" app-title="DISCO UI" header="components">
-      <disco-list-view id="componentsList" selection-mode="none" item-click-enabled>
-        <template disco-list-template>
-          <div class="item-title" data-bind="Title"></div>
-          <div class="item-description" data-bind="Description"></div>
-        </template>
-      </disco-list-view>
-    </disco-single-page>
-    <disco-pivot-page id="componentsPivot" app-title="DISCO UI">
-      <disco-pivot-item header="Overview">
-        <div class="item-title">Pivot</div>
-        <div class="item-description">Swipe between tabs</div>
-      </disco-pivot-item>
-      <disco-pivot-item header="List">
-        <disco-list-view selection-mode="none">
-          <disco-list-item>
-            <div class="item-title">First item</div>
-            <div class="item-description">simple list content</div>
-          </disco-list-item>
-          <disco-list-item>
-            <div class="item-title">Second item</div>
-            <div class="item-description">more content</div>
-          </disco-list-item>
-        </disco-list-view>
-      </disco-pivot-item>
-      <disco-pivot-item header="List 2">
-        <disco-list-view selection-mode="none">
-          <disco-list-item>
-            <div class="item-title">First item</div>
-            <div class="item-description">simple list content</div>
-          </disco-list-item>
-          <disco-list-item>
-            <div class="item-title">Second item</div>
-            <div class="item-description">more content</div>
-          </disco-list-item>
-        </disco-list-view>
-      </disco-pivot-item>
-    </disco-pivot-page>
-    <disco-hub-page id="componentsHub" header="discohub :)">
-      <disco-hub-section header="featured">
-        <disco-list-view selection-mode="none">
-          <disco-list-item>
-            <div class="item-title">Hero</div>
-            <div class="item-description">hub section content</div>
-          </disco-list-item>
-        </disco-list-view>
-      </disco-hub-section>
-      <disco-hub-section header="updates">
-        <disco-list-view selection-mode="none">
-          <disco-list-item>
-            <div class="item-title">Update 1</div>
-            <div class="item-description">latest changes</div>
-          </disco-list-item>
-          <disco-list-item>
-            <div class="item-title">Update 2</div>
-            <div class="item-description">more changes</div>
-          </disco-list-item>
-        </disco-list-view>
-      </disco-hub-section>
-    </disco-hub-page> <disco-single-page id="componentsCheckbox" app-title="DISCO UI" header="checkbox">
-      <div style="display:flex; flex-direction:column; gap:12px; align-items:flex-start;">
-        <disco-checkbox id="cbDefault">Key press</disco-checkbox>
-        <disco-checkbox id="cbChecked" checked>Lock and unlock</disco-checkbox>
-        <disco-checkbox id="cbDisabled" disabled>Disabled</disco-checkbox>
-      </div>
-    </disco-single-page> <disco-single-page id="componentsProgress" app-title="DISCO UI" header="progress-bar">
-      <div style="display:flex; flex-direction:column; gap:12px; align-items:flex-start;">
-        <disco-progress-bar id="progressDeterminate" value="25" max="100"></disco-progress-bar>
-        <div style="display:flex; gap:8px;">
-          <disco-button id="incProgress">Advance</disco-button>
-          <disco-button id="toggleIndeterminate">Toggle Indeterminate</disco-button>
-        </div>
-        <disco-progress-bar id="progressIndeterminate" indeterminate></disco-progress-bar>
-      </div>
-    </disco-single-page>
-    <disco-single-page id="componentsButton" app-title="DISCO UI" header="button">
-      <disco-button id="homeButton">Navigate</disco-button>
-    </disco-single-page>
-    <disco-pivot-page id="componentsScrollView" app-title="DISCO UI">
-      <style>
-        .scroll-demo {
-          display: flex;
-          flex-direction: column;
-          gap: 16px;
-        }
+    <disco-frame id="componentsFrame">
+        <disco-pivot-page id="componentsHome" app-title="DISCO UI">
+            <disco-pivot-item header="components">
+                <disco-list-view id="componentsList" selection-mode="none" item-click-enabled>
+                    <template disco-list-template>
+                        <div class="item-title" data-bind="Title"></div>
+                        <div class="item-description" data-bind="Description"></div>
+                    </template>
+                </disco-list-view>
+            </disco-pivot-item>
+            <disco-pivot-item header="easings">
+                <style>
+                    .easing-scroll {
+                        height: calc(100vh - 140px);
+                        width: 100%;
+                    }
 
-        .scroll-demo__caption {
-          margin: 0 0 8px 0;
-        }
+                    .easing-stack {
+                        display: flex;
+                        flex-direction: column;
+                        gap: 12px;
+                        padding: 8px 0 20px;
+                    }
 
-        .scroll-demo__frame {
-          width: 200px;
-          height: 200px;
-          background: #222;
-        }
+                    .easing-row {
+                        display: grid;
+                        grid-template-columns: repeat(3, minmax(0, 1fr));
+                        gap: 10px;
+                    }
 
-        .scroll-demo__content {
-          padding: 5px;
-          color: white;
-          line-height: 1.4;
-        }
+                    .easing-card {
+                        display: flex;
+                        flex-direction: column;
+                        gap: 8px;
+                        margin-bottom: 20px;
+                    }
 
-        .scroll-demo__snap {
-          width: 200px;
-          height: 200px;
-          background: #222;
-        }
+                    .easing-label {
+                        font-size: 20px;
+                        opacity: 0.75;
+                        text-transform: lowercase;
+                    }
 
-        .scroll-demo__tiles {
-          display: flex;
-          width: max-content;
-        }
+                    .easing-preview {
+                        height: 30px;
+                        position: relative;
+                        overflow: hidden;
+                        border: 1px solid var(--disco-border-color, rgba(255, 255, 255, 0.22));
+                    }
 
-        .scroll-demo__tile {
-          background: #2b2b2b;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          color: white;
-          scroll-snap-align: start;
+                    .easing-dot {
+                        position: absolute;
+                        width: 20px;
+                        height: 20px;
+                        top: 5px;
+                        left: 5px;
+                        background: var(--disco-accent, #d80073);
+                        animation: easing-shift 1.25s var(--ease-preview) infinite, easing-opacity 1.25s ease-in-out infinite;
+                    }
 
-          &:nth-child(1) {
-            background: #d80073;
-          }
+                    @keyframes easing-shift {
+                        0% {
+                            left: 5px;
+                        }
 
-          &:nth-child(2) {
-            background: #0050ef;
-          }
+                        10% {
+                            left: 5px;
+                        }
 
-          &:nth-child(3) {
-            background: #00c300;
-          }
-        }
-      </style>
-      <disco-pivot-item header="free">
-        <div class="scroll-demo">
-          <div>
-            <p class="scroll-demo__caption">Dimensions: 200x200</p>
-            <disco-scroll-view class="scroll-demo__frame" direction="vertical">
-              <div class="scroll-demo__content">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
-                incididunt ut
-                labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-                ullamco
-                laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit
-                in
-                voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-                cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-              </div>
-            </disco-scroll-view>
-          </div>
-          <div>
-            <disco-button id="stressScrollButton">Open Stress Test Page</disco-button>
-          </div>
-          <div>
-            <disco-button id="stressNativeScrollButton">Open Stress Test Page (Native HTML5
-              Scroll)</disco-button>
-          </div>
-        </div>
-      </disco-pivot-item>
-      <disco-pivot-item header="snap align">
-        <div class="scroll-demo">
-          <div>
-            <p class="scroll-demo__caption">Scroll snap tiles (vertical)</p>
-            <disco-scroll-view class="scroll-demo__snap">
-              <div class="scroll-demo__tiles" style="flex-direction: column">
-                <div class="scroll-demo__tile">Tile 1</div>
-                <div class="scroll-demo__tile">Tile 2</div>
-                <div class="scroll-demo__tile">Tile 3</div>
-              </div>
-            </disco-scroll-view>
-          </div>
-          <div>
-            <p class="scroll-demo__caption">Scroll snap tiles (horizontal)</p>
-            <disco-scroll-view class="scroll-demo__snap">
-              <div class="scroll-demo__tiles">
-                <div class="scroll-demo__tile">Tile 1</div>
-                <div class="scroll-demo__tile">Tile 2</div>
-                <div class="scroll-demo__tile">Tile 3</div>
-              </div>
-            </disco-scroll-view>
-          </div>
-        </div>
-      </disco-pivot-item>
-      <disco-pivot-item header="snap stop">
-        <div class="scroll-demo">
-          <div>
-            <p class="scroll-demo__caption">Scroll snap tiles (vertical, snap stop)</p>
-            <disco-flip-view class="scroll-demo__snap" snap-mode="stop" direction="vertical">
-              <div class="scroll-demo__tile">Tile 1</div>
-              <div class="scroll-demo__tile">Tile 2</div>
-              <div class="scroll-demo__tile">Tile 3</div>
-            </disco-flip-view>
-          </div>
-          <div>
-            <p class="scroll-demo__caption">Scroll snap tiles (horizontal, snap stop)</p>
-            <disco-flip-view class="scroll-demo__snap" snap-mode="stop">
-              <div class="scroll-demo__tile">Tile 1</div>
-              <div class="scroll-demo__tile">Tile 2</div>
-              <div class="scroll-demo__tile">Tile 3</div>
-            </disco-flip-view>
-          </div>
-        </div>
-      </disco-pivot-item>
-    </disco-pivot-page>
-    <disco-pivot-page id="componentsFlipView" app-title="DISCO UI" header="flip-view">
-      <style>
-        .scroll-demo {
-          display: flex;
-          flex-direction: column;
-          gap: 16px;
-        }
+                        75% {
+                            left: calc(100% - 25px);
+                        }
 
-        .scroll-demo__caption {
-          margin: 0 0 8px 0;
-        }
+                        100% {
+                            left: calc(100% - 25px);
+                        }
+                    }
+                    @keyframes easing-opacity {
+                        0% {
+                            opacity: 0;
+                        }
+                        10% {
+                            opacity: 1;
+                        }
+                        90% {
+                            opacity: 1;
+                        }
+                        100% {
+                            opacity: 0;
+                        }
+                    }
 
-        .scroll-demo__snap {
-          width: 200px;
-          height: 200px;
-          background: #222;
-        }
+                </style>
+                <div class="easing-stack">
+                    <div class="easing-row">
+                        <div class="easing-card" style="--ease-preview: var(--disco-ease-in)">
+                            <div class="easing-label">ease / in</div>
+                            <div class="easing-preview">
+                                <div class="easing-dot"></div>
+                            </div>
+                        </div>
+                        <div class="easing-card" style="--ease-preview: var(--disco-ease-out)">
+                            <div class="easing-label">ease / out</div>
+                            <div class="easing-preview">
+                                <div class="easing-dot"></div>
+                            </div>
+                        </div>
+                        <div class="easing-card" style="--ease-preview: var(--disco-ease-in-out)">
+                            <div class="easing-label">ease / in-out</div>
+                            <div class="easing-preview">
+                                <div class="easing-dot"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="easing-row">
+                        <div class="easing-card" style="--ease-preview: var(--disco-ease-in-quad)">
+                            <div class="easing-label">quad / in</div>
+                            <div class="easing-preview">
+                                <div class="easing-dot"></div>
+                            </div>
+                        </div>
+                        <div class="easing-card" style="--ease-preview: var(--disco-ease-out-quad)">
+                            <div class="easing-label">quad / out</div>
+                            <div class="easing-preview">
+                                <div class="easing-dot"></div>
+                            </div>
+                        </div>
+                        <div class="easing-card" style="--ease-preview: var(--disco-ease-in-out-quad)">
+                            <div class="easing-label">quad / in-out</div>
+                            <div class="easing-preview">
+                                <div class="easing-dot"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="easing-row">
+                        <div class="easing-card" style="--ease-preview: var(--disco-ease-in-cubic)">
+                            <div class="easing-label">cubic / in</div>
+                            <div class="easing-preview">
+                                <div class="easing-dot"></div>
+                            </div>
+                        </div>
+                        <div class="easing-card" style="--ease-preview: var(--disco-ease-out-cubic)">
+                            <div class="easing-label">cubic / out</div>
+                            <div class="easing-preview">
+                                <div class="easing-dot"></div>
+                            </div>
+                        </div>
+                        <div class="easing-card" style="--ease-preview: var(--disco-ease-in-out-cubic)">
+                            <div class="easing-label">cubic / in-out</div>
+                            <div class="easing-preview">
+                                <div class="easing-dot"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="easing-row">
+                        <div class="easing-card" style="--ease-preview: var(--disco-ease-in-quart)">
+                            <div class="easing-label">quart / in</div>
+                            <div class="easing-preview">
+                                <div class="easing-dot"></div>
+                            </div>
+                        </div>
+                        <div class="easing-card" style="--ease-preview: var(--disco-ease-out-quart)">
+                            <div class="easing-label">quart / out</div>
+                            <div class="easing-preview">
+                                <div class="easing-dot"></div>
+                            </div>
+                        </div>
+                        <div class="easing-card" style="--ease-preview: var(--disco-ease-in-out-quart)">
+                            <div class="easing-label">quart / in-out</div>
+                            <div class="easing-preview">
+                                <div class="easing-dot"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="easing-row">
+                        <div class="easing-card" style="--ease-preview: var(--disco-ease-in-quint)">
+                            <div class="easing-label">quint / in</div>
+                            <div class="easing-preview">
+                                <div class="easing-dot"></div>
+                            </div>
+                        </div>
+                        <div class="easing-card" style="--ease-preview: var(--disco-ease-out-quint)">
+                            <div class="easing-label">quint / out</div>
+                            <div class="easing-preview">
+                                <div class="easing-dot"></div>
+                            </div>
+                        </div>
+                        <div class="easing-card" style="--ease-preview: var(--disco-ease-in-out-quint)">
+                            <div class="easing-label">quint / in-out</div>
+                            <div class="easing-preview">
+                                <div class="easing-dot"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="easing-row">
+                        <div class="easing-card" style="--ease-preview: var(--disco-ease-in-sine)">
+                            <div class="easing-label">sine / in</div>
+                            <div class="easing-preview">
+                                <div class="easing-dot"></div>
+                            </div>
+                        </div>
+                        <div class="easing-card" style="--ease-preview: var(--disco-ease-out-sine)">
+                            <div class="easing-label">sine / out</div>
+                            <div class="easing-preview">
+                                <div class="easing-dot"></div>
+                            </div>
+                        </div>
+                        <div class="easing-card" style="--ease-preview: var(--disco-ease-in-out-sine)">
+                            <div class="easing-label">sine / in-out</div>
+                            <div class="easing-preview">
+                                <div class="easing-dot"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="easing-row">
+                        <div class="easing-card" style="--ease-preview: var(--disco-ease-in-expo)">
+                            <div class="easing-label">expo / in</div>
+                            <div class="easing-preview">
+                                <div class="easing-dot"></div>
+                            </div>
+                        </div>
+                        <div class="easing-card" style="--ease-preview: var(--disco-ease-out-expo)">
+                            <div class="easing-label">expo / out</div>
+                            <div class="easing-preview">
+                                <div class="easing-dot"></div>
+                            </div>
+                        </div>
+                        <div class="easing-card" style="--ease-preview: var(--disco-ease-in-out-expo)">
+                            <div class="easing-label">expo / in-out</div>
+                            <div class="easing-preview">
+                                <div class="easing-dot"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="easing-row">
+                        <div class="easing-card" style="--ease-preview: var(--disco-ease-in-circ)">
+                            <div class="easing-label">circ / in</div>
+                            <div class="easing-preview">
+                                <div class="easing-dot"></div>
+                            </div>
+                        </div>
+                        <div class="easing-card" style="--ease-preview: var(--disco-ease-out-circ)">
+                            <div class="easing-label">circ / out</div>
+                            <div class="easing-preview">
+                                <div class="easing-dot"></div>
+                            </div>
+                        </div>
+                        <div class="easing-card" style="--ease-preview: var(--disco-ease-in-out-circ)">
+                            <div class="easing-label">circ / in-out</div>
+                            <div class="easing-preview">
+                                <div class="easing-dot"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="easing-row">
+                        <div class="easing-card" style="--ease-preview: var(--disco-ease-in-back)">
+                            <div class="easing-label">back / in</div>
+                            <div class="easing-preview">
+                                <div class="easing-dot"></div>
+                            </div>
+                        </div>
+                        <div class="easing-card" style="--ease-preview: var(--disco-ease-out-back)">
+                            <div class="easing-label">back / out</div>
+                            <div class="easing-preview">
+                                <div class="easing-dot"></div>
+                            </div>
+                        </div>
+                        <div class="easing-card" style="--ease-preview: var(--disco-ease-in-out-back)">
+                            <div class="easing-label">back / in-out</div>
+                            <div class="easing-preview">
+                                <div class="easing-dot"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </disco-pivot-item>
+        </disco-pivot-page>
+        <disco-pivot-page id="componentsPivot" app-title="DISCO UI">
+            <disco-pivot-item header="Overview">
+                <div class="item-title">Pivot</div>
+                <div class="item-description">Swipe between tabs</div>
+            </disco-pivot-item>
+            <disco-pivot-item header="List">
+                <disco-list-view selection-mode="none">
+                    <disco-list-item>
+                        <div class="item-title">First item</div>
+                        <div class="item-description">simple list content</div>
+                    </disco-list-item>
+                    <disco-list-item>
+                        <div class="item-title">Second item</div>
+                        <div class="item-description">more content</div>
+                    </disco-list-item>
+                </disco-list-view>
+            </disco-pivot-item>
+            <disco-pivot-item header="List 2">
+                <disco-list-view selection-mode="none">
+                    <disco-list-item>
+                        <div class="item-title">First item</div>
+                        <div class="item-description">simple list content</div>
+                    </disco-list-item>
+                    <disco-list-item>
+                        <div class="item-title">Second item</div>
+                        <div class="item-description">more content</div>
+                    </disco-list-item>
+                </disco-list-view>
+            </disco-pivot-item>
+        </disco-pivot-page>
+        <disco-hub-page id="componentsHub" header="discohub :)">
+            <disco-hub-section header="featured">
+                <disco-list-view selection-mode="none">
+                    <disco-list-item>
+                        <div class="item-title">Hero</div>
+                        <div class="item-description">hub section content</div>
+                    </disco-list-item>
+                </disco-list-view>
+            </disco-hub-section>
+            <disco-hub-section header="updates">
+                <disco-list-view selection-mode="none">
+                    <disco-list-item>
+                        <div class="item-title">Update 1</div>
+                        <div class="item-description">latest changes</div>
+                    </disco-list-item>
+                    <disco-list-item>
+                        <div class="item-title">Update 2</div>
+                        <div class="item-description">more changes</div>
+                    </disco-list-item>
+                </disco-list-view>
+            </disco-hub-section>
+        </disco-hub-page>
+        <disco-single-page id="componentsAppBar" app-title="DISCO UI" header="app bar">
+            <disco-list-view id="appBarTestList" selection-mode="none" item-click-enabled>
+                <template disco-list-template>
+                    <div class="item-title" data-bind="Title"></div>
+                </template>
+            </disco-list-view>
+        </disco-single-page>
 
-        .scroll-demo__tiles {
-          display: flex;
-          width: max-content;
-        }
+        <disco-single-page id="componentsGroupStyle" app-title="DISCO UI" header="group style list">
+            <disco-list-view id="groupStyleList" selection-mode="none" item-click-enabled group-style="auto" group-label-field="Title">
+                <template disco-list-template>
+                    <div class="item-title" data-bind="Title"></div>
+                    <div class="item-description" data-bind="Description"></div>
+                </template>
+            </disco-list-view>
+        </disco-single-page>
 
-        .scroll-demo__tile {
-          background: #2b2b2b;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          color: white;
-          scroll-snap-align: start;
-          min-width: 200px;
-          min-height: 200px;
+        <!-- Test Pages -->
 
-          &:nth-child(1) {
-            background: #d80073;
-          }
+        <disco-single-page id="appBarSinglePage" app-title="DISCO UI" header="app bar">
+            <div style="font-size: 16px; opacity: 0.9; padding: 12px;">
+                Standard App Bar in Single Page
+            </div>
+            <template data-appbar-global>
+                <disco-app-bar mode="compact" opacity="0.9">
+                    <disco-app-bar-icon-button icon="voicemail" label="voicemail"></disco-app-bar-icon-button>
+                    <disco-app-bar-icon-button icon="dialpad" label="keypad"></disco-app-bar-icon-button>
+                    <disco-app-bar-icon-button icon="addressbook" label="phone book"></disco-app-bar-icon-button>
+                    <disco-app-bar-icon-button icon="search" label="search"></disco-app-bar-icon-button>
+                    <disco-app-bar-menu-item label="settings"></disco-app-bar-menu-item>
+                </disco-app-bar>
+            </template>
+        </disco-single-page>
 
-          &:nth-child(2) {
-            background: #0050ef;
-          }
+        <disco-pivot-page id="appBarPivotPage" app-title="DISCO UI">
+            <!-- Global App Bar -->
+            <template data-appbar-global>
+                <disco-app-bar mode="compact">
+                    <disco-app-bar-icon-button icon="plus" label="global add"></disco-app-bar-icon-button>
+                    <disco-app-bar-menu-item label="global option"></disco-app-bar-menu-item>
+                </disco-app-bar>
+            </template>
 
-          &:nth-child(3) {
-            background: #00c300;
-          }
-        }
-      </style>
-      <disco-pivot-item header="horizontal">
-        <div class="scroll-demo">
-          <div>
-            <p class="scroll-demo__caption">standard</p>
-            <disco-flip-view class="scroll-demo__snap">
-              <div class="scroll-demo__tile">Tile 1</div>
-              <div class="scroll-demo__tile">Tile 2</div>
-              <div class="scroll-demo__tile">Tile 3</div>
-            </disco-flip-view>
-          </div>
-          <div>
-            <p class="scroll-demo__caption">strict snap</p>
-            <disco-flip-view class="scroll-demo__snap" snap-mode="strict">
-              <div class="scroll-demo__tile">Tile 1</div>
-              <div class="scroll-demo__tile">Tile 2</div>
-              <div class="scroll-demo__tile">Tile 3</div>
-            </disco-flip-view>
-          </div>
-          <div>
-            <p class="scroll-demo__caption">loop</p>
-            <disco-flip-view class="scroll-demo__snap" overscroll-mode="loop">
-              <div class="scroll-demo__tile">Tile 1</div>
-              <div class="scroll-demo__tile">Tile 2</div>
-              <div class="scroll-demo__tile">Tile 3</div>
-            </disco-flip-view>
-          </div>
-        </div>
-      </disco-pivot-item>
-      <disco-pivot-item header="vertical">
-        <div class="scroll-demo">
-          <div>
-            <p class="scroll-demo__caption">standard</p>
-            <disco-flip-view class="scroll-demo__snap" direction="vertical">
-              <div class="scroll-demo__tile">Tile 1</div>
-              <div class="scroll-demo__tile">Tile 2</div>
-              <div class="scroll-demo__tile">Tile 3</div>
-            </disco-flip-view>
-          </div>
-          <div>
-            <p class="scroll-demo__caption">strict snap</p>
-            <disco-flip-view class="scroll-demo__snap" direction="vertical" snap-mode="strict">
-              <div class="scroll-demo__tile">Tile 1</div>
-              <div class="scroll-demo__tile">Tile 2</div>
-              <div class="scroll-demo__tile">Tile 3</div>
-            </disco-flip-view>
-          </div>
-          <div>
-            <p class="scroll-demo__caption">loop</p>
-            <disco-flip-view class="scroll-demo__snap" direction="vertical" overscroll-mode="loop">
-              <div class="scroll-demo__tile">Tile 1</div>
-              <div class="scroll-demo__tile">Tile 2</div>
-              <div class="scroll-demo__tile">Tile 3</div>
-            </disco-flip-view>
-          </div>
-        </div>
-      </disco-pivot-item>
-    </disco-pivot-page>
-  </disco-frame>
-  <script type="module" src="./index.js"></script>
+            <disco-pivot-item header="w/bar">
+                <div style="padding: 12px;">This item has its own App Bar, overriding the global one.</div>
+                <!-- Local App Bar override -->
+                <template data-appbar>
+                    <disco-app-bar mode="compact">
+                        <disco-app-bar-icon-button icon="share" label="share (local)"></disco-app-bar-icon-button>
+                        <disco-app-bar-menu-item label="local option"></disco-app-bar-menu-item>
+                    </disco-app-bar>
+                </template>
+            </disco-pivot-item>
+
+            <disco-pivot-item header="global">
+                <div style="padding: 12px;">This item uses the Global App Bar.</div>
+                <disco-list-view selection-mode="none">
+                    <disco-list-item>
+                        <div class="item-title">Item 1</div>
+                    </disco-list-item>
+                </disco-list-view>
+            </disco-pivot-item>
+        </disco-pivot-page>
+
+        <disco-pivot-page id="appBarPivotLocalOnlyPage" app-title="DISCO UI">
+            <disco-pivot-item header="w/bar">
+                <div style="padding: 12px;">Local-only App Bar (no global).</div>
+                <template data-appbar>
+                    <disco-app-bar mode="compact">
+                        <disco-app-bar-icon-button icon="share" label="share (local)"></disco-app-bar-icon-button>
+                        <disco-app-bar-menu-item label="local option"></disco-app-bar-menu-item>
+                    </disco-app-bar>
+                </template>
+            </disco-pivot-item>
+
+            <disco-pivot-item header="no bar">
+                <div style="padding: 12px;">No App Bar here.</div>
+                <disco-list-view selection-mode="none">
+                    <disco-list-item>
+                        <div class="item-title">Item 1</div>
+                    </disco-list-item>
+                </disco-list-view>
+            </disco-pivot-item>
+
+            <disco-pivot-item header="menu only">
+                <div style="padding: 12px;">Menu-only App Bar (no icons).</div>
+                <template data-appbar>
+                    <disco-app-bar mode="compact">
+                        <disco-app-bar-menu-item label="only menu item"></disco-app-bar-menu-item>
+                        <disco-app-bar-menu-item label="second item"></disco-app-bar-menu-item>
+                    </disco-app-bar>
+                </template>
+            </disco-pivot-item>
+        </disco-pivot-page>
+
+        <disco-hub-page id="appBarHubPage" header="panorama">
+            <!-- Global App Bar -->
+            <template data-appbar-global>
+                <disco-app-bar mode="compact">
+                    <disco-app-bar-icon-button icon="home" label="global home"></disco-app-bar-icon-button>
+                    <disco-app-bar-menu-item label="global option"></disco-app-bar-menu-item>
+                </disco-app-bar>
+            </template>
+
+            <disco-hub-section header="w/bar">
+                <div style="padding: 12px;">This section overrides the App Bar.</div>
+                <template data-appbar>
+                    <disco-app-bar mode="compact">
+                        <disco-app-bar-icon-button icon="camera" label="camera (local)"></disco-app-bar-icon-button>
+                        <disco-app-bar-menu-item label="local option"></disco-app-bar-menu-item>
+                    </disco-app-bar>
+                </template>
+            </disco-hub-section>
+
+            <disco-hub-section header="global">
+                <div style="padding: 12px;">This section uses global App Bar.</div>
+                <disco-list-view selection-mode="none">
+                    <disco-list-item>
+                        <div class="item-title">News</div>
+                    </disco-list-item>
+                </disco-list-view>
+            </disco-hub-section>
+        </disco-hub-page>
+
+        <disco-hub-page id="appBarHubLocalOnlyPage" header="panorama">
+            <disco-hub-section header="w/bar">
+                <div style="padding: 12px;">Local-only App Bar (no global).</div>
+                <template data-appbar>
+                    <disco-app-bar mode="compact">
+                        <disco-app-bar-icon-button icon="camera" label="camera (local)"></disco-app-bar-icon-button>
+                        <disco-app-bar-menu-item label="local option"></disco-app-bar-menu-item>
+                    </disco-app-bar>
+                </template>
+            </disco-hub-section>
+
+            <disco-hub-section header="no bar">
+                <div style="padding: 12px;">No App Bar here.</div>
+                <disco-list-view selection-mode="none">
+                    <disco-list-item>
+                        <div class="item-title">News</div>
+                    </disco-list-item>
+                </disco-list-view>
+            </disco-hub-section>
+
+            <disco-hub-section header="menu only">
+                <div style="padding: 12px;">Menu-only App Bar (no icons).</div>
+                <template data-appbar>
+                    <disco-app-bar mode="compact">
+                        <disco-app-bar-menu-item label="only menu item"></disco-app-bar-menu-item>
+                        <disco-app-bar-menu-item label="second item"></disco-app-bar-menu-item>
+                    </disco-app-bar>
+                </template>
+            </disco-hub-section>
+        </disco-hub-page>
+        <disco-single-page id="componentsCheckbox" app-title="DISCO UI" header="checkbox">
+            <div style="display:flex; flex-direction:column; gap:12px; align-items:flex-start;">
+                <disco-checkbox id="cbDefault">Key press</disco-checkbox>
+                <disco-checkbox id="cbChecked" checked>Lock and unlock</disco-checkbox>
+                <disco-checkbox id="cbDisabled" disabled>Disabled</disco-checkbox>
+            </div>
+        </disco-single-page> <disco-single-page id="componentsProgress" app-title="DISCO UI" header="progress-bar">
+            <div style="display:flex; flex-direction:column; gap:12px; align-items:flex-start;">
+                <disco-progress-bar id="progressDeterminate" value="25" max="100"></disco-progress-bar>
+                <div style="display:flex; gap:8px;">
+                    <disco-button id="incProgress">Advance</disco-button>
+                    <disco-button id="toggleIndeterminate">Toggle Indeterminate</disco-button>
+                </div>
+                <disco-progress-bar id="progressIndeterminate" indeterminate></disco-progress-bar>
+            </div>
+        </disco-single-page>
+        <disco-single-page id="componentsComboBox" app-title="DISCO UI" header="combo-box">
+            <disco-combo-box style="width: 100%;">
+                <disco-combo-box-item value="1">Visual Studio 2013</disco-combo-box-item>
+                <disco-combo-box-item value="2" selected>Silverlight 8.1</disco-combo-box-item>
+                <disco-combo-box-item value="3">Windows Runtime</disco-combo-box-item>
+                <disco-combo-box-item value="4">XAML Debugger</disco-combo-box-item>
+            </disco-combo-box>
+            </div>
+        </disco-single-page>
+        <disco-single-page id="componentsButton" app-title="DISCO UI" header="button">
+            <div>
+                <disco-button id="homeButton">Navigate</disco-button>
+            </div>
+        </disco-single-page>
+        <disco-single-page id="componentsTextBox" app-title="DISCO UI" header="text-box">
+            <div>
+                <disco-text-box placeholder="Text Input"></disco-text-box>
+            </div>
+        </disco-single-page>
+        <disco-single-page id="componentsPasswordBox" app-title="DISCO UI" header="password-box">
+            <div>
+                <disco-password-box placeholder="Password Input"></disco-password-box>
+            </div>
+        </disco-single-page>
+        <disco-pivot-page id="componentsScrollView" app-title="DISCO UI">
+            <style>
+                .scroll-demo {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 16px;
+                }
+
+                .scroll-demo__caption {
+                    margin: 0 0 8px 0;
+                }
+
+                .scroll-demo__frame {
+                    width: 200px;
+                    height: 200px;
+                    background: #222;
+                }
+
+                .scroll-demo__content {
+                    padding: 5px;
+                    color: white;
+                    line-height: 1.4;
+                }
+
+                .scroll-demo__snap {
+                    width: 200px;
+                    height: 200px;
+                    background: #222;
+                }
+
+                .scroll-demo__tiles {
+                    display: flex;
+                    width: max-content;
+                }
+
+                .scroll-demo__tile {
+                    background: #2b2b2b;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    color: white;
+                    scroll-snap-align: start;
+
+                    &:nth-child(1) {
+                        background: #d80073;
+                    }
+
+                    &:nth-child(2) {
+                        background: #0050ef;
+                    }
+
+                    &:nth-child(3) {
+                        background: #00c300;
+                    }
+                }
+            </style>
+            <disco-pivot-item header="free">
+                <div class="scroll-demo">
+                    <div>
+                        <p class="scroll-demo__caption">Dimensions: 200x200</p>
+                        <disco-scroll-view class="scroll-demo__frame" direction="vertical">
+                            <div class="scroll-demo__content">
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
+                                incididunt ut
+                                labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+                                ullamco
+                                laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit
+                                in
+                                voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
+                                cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                            </div>
+                        </disco-scroll-view>
+                    </div>
+                    <div>
+                        <disco-button id="stressScrollButton">Open Stress Test Page</disco-button>
+                    </div>
+                    <div>
+                        <disco-button id="stressNativeScrollButton">Open Stress Test Page (Native HTML5
+                            Scroll)</disco-button>
+                    </div>
+                </div>
+            </disco-pivot-item>
+            <disco-pivot-item header="snap align">
+                <div class="scroll-demo">
+                    <div>
+                        <p class="scroll-demo__caption">Scroll snap tiles (vertical)</p>
+                        <disco-scroll-view class="scroll-demo__snap">
+                            <div class="scroll-demo__tiles" style="flex-direction: column">
+                                <div class="scroll-demo__tile">Tile 1</div>
+                                <div class="scroll-demo__tile">Tile 2</div>
+                                <div class="scroll-demo__tile">Tile 3</div>
+                            </div>
+                        </disco-scroll-view>
+                    </div>
+                    <div>
+                        <p class="scroll-demo__caption">Scroll snap tiles (horizontal)</p>
+                        <disco-scroll-view class="scroll-demo__snap">
+                            <div class="scroll-demo__tiles">
+                                <div class="scroll-demo__tile">Tile 1</div>
+                                <div class="scroll-demo__tile">Tile 2</div>
+                                <div class="scroll-demo__tile">Tile 3</div>
+                            </div>
+                        </disco-scroll-view>
+                    </div>
+                </div>
+            </disco-pivot-item>
+            <disco-pivot-item header="snap stop">
+                <div class="scroll-demo">
+                    <div>
+                        <p class="scroll-demo__caption">Scroll snap tiles (vertical, snap stop)</p>
+                        <disco-flip-view class="scroll-demo__snap" snap-mode="stop" direction="vertical">
+                            <div class="scroll-demo__tile">Tile 1</div>
+                            <div class="scroll-demo__tile">Tile 2</div>
+                            <div class="scroll-demo__tile">Tile 3</div>
+                        </disco-flip-view>
+                    </div>
+                    <div>
+                        <p class="scroll-demo__caption">Scroll snap tiles (horizontal, snap stop)</p>
+                        <disco-flip-view class="scroll-demo__snap" snap-mode="stop">
+                            <div class="scroll-demo__tile">Tile 1</div>
+                            <div class="scroll-demo__tile">Tile 2</div>
+                            <div class="scroll-demo__tile">Tile 3</div>
+                        </disco-flip-view>
+                    </div>
+                </div>
+            </disco-pivot-item>
+        </disco-pivot-page>
+        <disco-pivot-page id="componentsFlipView" app-title="DISCO UI" header="flip-view">
+            <style>
+                .scroll-demo {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 16px;
+                }
+
+                .scroll-demo__caption {
+                    margin: 0 0 8px 0;
+                }
+
+                .scroll-demo__snap {
+                    width: 200px;
+                    height: 200px;
+                    background: #222;
+                }
+
+                .scroll-demo__tiles {
+                    display: flex;
+                    width: max-content;
+                }
+
+                .scroll-demo__tile {
+                    background: #2b2b2b;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    color: white;
+                    scroll-snap-align: start;
+                    min-width: 200px;
+                    min-height: 200px;
+
+                    &:nth-child(1) {
+                        background: #d80073;
+                    }
+
+                    &:nth-child(2) {
+                        background: #0050ef;
+                    }
+
+                    &:nth-child(3) {
+                        background: #00c300;
+                    }
+                }
+            </style>
+            <disco-pivot-item header="horizontal">
+                <div class="scroll-demo">
+                    <div>
+                        <p class="scroll-demo__caption">standard</p>
+                        <disco-flip-view class="scroll-demo__snap">
+                            <div class="scroll-demo__tile">Tile 1</div>
+                            <div class="scroll-demo__tile">Tile 2</div>
+                            <div class="scroll-demo__tile">Tile 3</div>
+                        </disco-flip-view>
+                    </div>
+                    <div>
+                        <p class="scroll-demo__caption">strict snap</p>
+                        <disco-flip-view class="scroll-demo__snap" snap-mode="strict">
+                            <div class="scroll-demo__tile">Tile 1</div>
+                            <div class="scroll-demo__tile">Tile 2</div>
+                            <div class="scroll-demo__tile">Tile 3</div>
+                        </disco-flip-view>
+                    </div>
+                    <div>
+                        <p class="scroll-demo__caption">loop</p>
+                        <disco-flip-view class="scroll-demo__snap" overscroll-mode="loop">
+                            <div class="scroll-demo__tile">Tile 1</div>
+                            <div class="scroll-demo__tile">Tile 2</div>
+                            <div class="scroll-demo__tile">Tile 3</div>
+                        </disco-flip-view>
+                    </div>
+                </div>
+            </disco-pivot-item>
+            <disco-pivot-item header="vertical">
+                <div class="scroll-demo">
+                    <div>
+                        <p class="scroll-demo__caption">standard</p>
+                        <disco-flip-view class="scroll-demo__snap" direction="vertical">
+                            <div class="scroll-demo__tile">Tile 1</div>
+                            <div class="scroll-demo__tile">Tile 2</div>
+                            <div class="scroll-demo__tile">Tile 3</div>
+                        </disco-flip-view>
+                    </div>
+                    <div>
+                        <p class="scroll-demo__caption">strict snap</p>
+                        <disco-flip-view class="scroll-demo__snap" direction="vertical" snap-mode="strict">
+                            <div class="scroll-demo__tile">Tile 1</div>
+                            <div class="scroll-demo__tile">Tile 2</div>
+                            <div class="scroll-demo__tile">Tile 3</div>
+                        </disco-flip-view>
+                    </div>
+                    <div>
+                        <p class="scroll-demo__caption">loop</p>
+                        <disco-flip-view class="scroll-demo__snap" direction="vertical" overscroll-mode="loop">
+                            <div class="scroll-demo__tile">Tile 1</div>
+                            <div class="scroll-demo__tile">Tile 2</div>
+                            <div class="scroll-demo__tile">Tile 3</div>
+                        </disco-flip-view>
+                    </div>
+                </div>
+            </disco-pivot-item>
+        </disco-pivot-page>
+    </disco-frame>
+    <script type="module" src="./index.js"></script>
 </body>
 
 </html>
