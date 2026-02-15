@@ -58,20 +58,11 @@ jobs:
         with:
           name: DiscoUI Capacitor v${{ steps.get_version.outputs.VERSION }}
           body: |
-            ## DiscoUI Capacitor Release v${{ steps.get_version.outputs.VERSION }}
-            
-            **Published to NPM:** https://www.npmjs.com/package/discouicapacitor
-            
-            ### Installation
             ```bash
-            npm install discouicapacitor@${{ steps.get_version.outputs.VERSION }}
+            npm install @cherryhoax/discouicapacitor@${{ steps.get_version.outputs.VERSION }}
             ```
             
-            ### Example Android APK
-            The debug APK for the example app is included in this release.
-            
-            ### Changes
-            See the [CHANGELOG](https://github.com/${{ github.repository }}/blob/main/CHANGELOG.md) for details.
+            **NPM:** https://www.npmjs.com/package/@cherryhoax/discouicapacitor
           files: |
             discouicapacitor-${{ github.ref_name }}.zip
             example-app/android/app/build/outputs/apk/debug/app-debug.apk
