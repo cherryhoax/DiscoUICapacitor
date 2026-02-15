@@ -1,6 +1,6 @@
 {
   "name": "@cherryhoax/discouicapacitor",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "well its disco ui. in android",
   "main": "src/index.js",
   "module": "src/index.js",
