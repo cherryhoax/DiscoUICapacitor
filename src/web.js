@@ -9,8 +9,17 @@ const FALLBACK_IMPORT_PATHS = ['/discoui.mjs'];
 const DEFAULT_CONFIG_PATH = '/disco.config.json';
 
 const mergeConfig = (base, overrides) => {
-  if (!overrides) return { ...base };
-  return {
+  const hasSplashConfig = Boolean(base?.splash || overrides?.splash);
+
+  if (!overrides) {
+    const mergedBase = { ...base };
+    if (!hasSplashConfig) {
+      mergedBase.splash = { mode: 'none' };
+    }
+    return mergedBase;
+  }
+
+  const merged = {
     ...base,
     ...overrides,
     splash: {
@@ -18,6 +27,12 @@ const mergeConfig = (base, overrides) => {
       ...overrides.splash,
     },
   };
+
+  if (!hasSplashConfig) {
+    merged.splash = { mode: 'none' };
+  }
+
+  return merged;
 };
 
 const wrapDiscoAppConstructor = (DiscoAppCtor, defaultConfig) => {

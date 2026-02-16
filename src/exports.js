@@ -25,7 +25,7 @@ class DiscoApp extends BaseDiscoApp {
     const initialOptions = { ...options };
     
     if (!userProvidedSplash) {
-      initialOptions.splash = { ...initialOptions.splash, mode: 'manual' };
+      initialOptions.splash = { ...initialOptions.splash, mode: 'none' };
     }
 
     super(initialOptions);
