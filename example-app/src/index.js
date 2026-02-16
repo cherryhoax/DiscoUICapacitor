@@ -2,29 +2,43 @@
  * Example demo loader used by the examples page.
  */
 
-import { DiscoApp, DiscoDatePicker, DiscoTimePicker, DiscoTimeSpanPicker } from '@cherryhoax/discoui';
+import { DISCO_COLORS, DiscoApp, DiscoContextMenu, DiscoDatePicker, DiscoDialog, DiscoMessageDialog, DiscoTimePicker, DiscoTimeSpanPicker } from '@cherryhoax/discoui';
 const launchDemo = async () => {
   const app = new DiscoApp();
+  app.setInsets({ top: 0, bottom: 0, left: 0, right: 0 });
   window.app = app;
 
   const frame = document.getElementById('componentsFrame');
   if (!frame) return;
   window.frame = frame;
   const homePage = document.getElementById('componentsHome');
+  const homeEasingsItem = document.getElementById('componentsHomeEasings');
+  const homeColorsList = document.getElementById('componentsHomeColorsList');
   window.homePage = homePage;
   const pivotPage = document.getElementById('componentsPivot');
   const hubPage = document.getElementById('componentsHub');
   const appBarPage = document.getElementById('componentsAppBar');
   const groupStylePage = document.getElementById('componentsGroupStyle');
   const checkboxPage = document.getElementById('componentsCheckbox');
+  const radioButtonPage = document.getElementById('componentsRadioButton');
   const progressPage = document.getElementById('componentsProgress');
+  const progressRingPage = document.getElementById('componentsProgressRing');
   const comboBoxPage = document.getElementById('componentsComboBox');
   const buttonPage = document.getElementById('componentsButton');
   const textBoxPage = document.getElementById('componentsTextBox');
   const passwordBoxPage = document.getElementById('componentsPasswordBox');
+  const sliderPage = document.getElementById('componentsSlider');
+  const toggleSwitchPage = document.getElementById('componentsToggleSwitch');
+  const toggleButtonPage = document.getElementById('componentsToggleButton');
+  const dialogPage = document.getElementById('componentsDialog');
+  const messageDialogPage = document.getElementById('componentsMessageDialog');
+  const contextMenuPage = document.getElementById('componentsContextMenu');
+  const imagePage = document.getElementById('componentsImage');
+  const mediaElementPage = document.getElementById('componentsMediaElement');
   const scrollViewPage = document.getElementById('componentsScrollView');
   const flipViewPage = document.getElementById('componentsFlipView');
   const groupStyleList = document.getElementById('groupStyleList');
+  const groupStyleSettingsList = document.getElementById('groupStyleSettingsList');
   const comboBox = document.querySelector('#componentsComboBox disco-combo-box');
 
   // App Bar Test Pages
@@ -114,9 +128,19 @@ const launchDemo = async () => {
       { id: 'appbar', Title: 'App Bar', Description: '' },
       { id: 'groupstyle', Title: 'Group Style (Sticky Header)', Description: '' },
       { id: 'progress', Title: 'Progress Bar', Description: '' },
+      { id: 'progressring', Title: 'Progress Ring', Description: '' },
       { id: 'checkbox', Title: 'Checkbox', Description: '' },
+      { id: 'radiobutton', Title: 'Radio Button', Description: '' },
       { id: 'textbox', Title: 'Text Box', Description: '' },
       { id: 'passwordbox', Title: 'Password Box', Description: '' },
+      { id: 'slider', Title: 'Slider', Description: '' },
+      { id: 'dialog', Title: 'Dialog', Description: '' },
+      { id: 'contextmenu', Title: 'Context Menu', Description: '' },
+      { id: 'image', Title: 'Image', Description: '' },
+      { id: 'mediaelement', Title: 'Media Element', Description: '' },
+      { id: 'messagedialog', Title: 'Message Dialog', Description: '' },
+      { id: 'togglebutton', Title: 'Toggle Button', Description: '' },
+      { id: 'toggleswitch', Title: 'Toggle Switch', Description: '' },
       { id: 'combobox', Title: 'Combo Box', Description: '' },
       { id: 'button', Title: 'Button', Description: '' },
       { id: 'scrollview', Title: 'Scroll View', Description: '' },
@@ -206,8 +230,14 @@ const launchDemo = async () => {
       if (id === 'progress') {
         frame.navigate(progressPage);
       }
+      if (id === 'progressring') {
+        frame.navigate(progressRingPage);
+      }
       if (id === 'checkbox') {
         frame.navigate(checkboxPage);
+      }
+      if (id === 'radiobutton') {
+        frame.navigate(radioButtonPage);
       }
       if (id === 'combobox') {
         frame.navigate(comboBoxPage);
@@ -220,6 +250,30 @@ const launchDemo = async () => {
       }
       if (id === 'passwordbox') {
         frame.navigate(passwordBoxPage);
+      }
+      if (id === 'slider') {
+        frame.navigate(sliderPage);
+      }
+      if (id === 'dialog') {
+        frame.navigate(dialogPage);
+      }
+      if (id === 'image') {
+        frame.navigate(imagePage);
+      }
+      if (id === 'contextmenu') {
+        frame.navigate(contextMenuPage);
+      }
+      if (id === 'messagedialog') {
+        frame.navigate(messageDialogPage);
+      }
+      if (id === 'mediaelement') {
+        frame.navigate(mediaElementPage);
+      }
+      if (id === 'togglebutton') {
+        frame.navigate(toggleButtonPage);
+      }
+      if (id === 'toggleswitch') {
+        frame.navigate(toggleSwitchPage);
       }
       if (id === 'scrollview') {
         frame.navigate(scrollViewPage);
@@ -281,6 +335,9 @@ const launchDemo = async () => {
   const inc = document.getElementById('incProgress');
   const toggle = document.getElementById('toggleIndeterminate');
   const det = document.getElementById('progressDeterminate');
+  const incRing = document.getElementById('incProgressRing');
+  const toggleRing = document.getElementById('toggleRingIndeterminate');
+  const detRing = document.getElementById('progressRingDeterminate');
   if (inc && det) {
     inc.addEventListener('click', () => {
       const current = Number(det.getAttribute('value') || 0);
@@ -294,12 +351,172 @@ const launchDemo = async () => {
       else det.setAttribute('indeterminate', '');
     });
   }
+  if (incRing && detRing) {
+    incRing.addEventListener('click', () => {
+      const current = Number(detRing.getAttribute('value') || 0);
+      const max = Number(detRing.getAttribute('max') || 100);
+      detRing.setAttribute('value', String(Math.min(max, current + 10)));
+    });
+  }
+  if (toggleRing && detRing) {
+    toggleRing.addEventListener('click', () => {
+      if (detRing.hasAttribute('indeterminate')) detRing.removeAttribute('indeterminate');
+      else detRing.setAttribute('indeterminate', '');
+    });
+  }
 
   if (comboBox) {
     comboBox.addEventListener('change', (event) => {
       const detail = event.detail || {};
       console.log('Combo box changed:', detail.value, detail.index);
     });
+  }
+
+  const demoSlider = document.getElementById('demoSlider');
+  const demoSliderValue = document.getElementById('demoSliderValue');
+  if (demoSlider && demoSliderValue) {
+    const syncSliderValue = () => {
+      demoSliderValue.textContent = `Value: ${demoSlider.getAttribute('value') || '0'}`;
+    };
+    demoSlider.addEventListener('input', syncSliderValue);
+    demoSlider.addEventListener('change', syncSliderValue);
+    syncSliderValue();
+  }
+
+  const demoToggleSwitch = document.getElementById('demoToggleSwitch');
+  const demoToggleValue = document.getElementById('demoToggleValue');
+  if (demoToggleSwitch && demoToggleValue) {
+    const syncToggle = () => {
+      demoToggleValue.textContent = `State: ${demoToggleSwitch.hasAttribute('checked') ? 'on' : 'off'}`;
+    };
+    demoToggleSwitch.addEventListener('change', syncToggle);
+    syncToggle();
+  }
+
+  const demoToggleButton = document.getElementById('demoToggleButton');
+  const demoToggleButtonValue = document.getElementById('demoToggleButtonValue');
+  if (demoToggleButton && demoToggleButtonValue) {
+    const syncToggleButton = () => {
+      demoToggleButtonValue.textContent = `State: ${demoToggleButton.hasAttribute('checked') ? 'on' : 'off'}`;
+    };
+    demoToggleButton.addEventListener('change', syncToggleButton);
+    syncToggleButton();
+  }
+
+  const openDialogButton = document.getElementById('openDialogButton');
+  const dialogResult = document.getElementById('dialogResult');
+  if (openDialogButton && dialogResult) {
+    openDialogButton.addEventListener('click', async () => {
+      const dialog = new DiscoDialog('Simple Dialog');
+      dialog.append('This is a basic dialog shell.');
+      await dialog.open();
+      dialogResult.textContent = 'Result: closed';
+    });
+  }
+
+  const openMessageDialogButton = document.getElementById('openMessageDialogButton');
+  const messageDialogResult = document.getElementById('messageDialogResult');
+  if (openMessageDialogButton && messageDialogResult) {
+    openMessageDialogButton.addEventListener('click', async () => {
+      const dialog = new DiscoMessageDialog('Delete Item', 'This action cannot be undone.', {
+        cancel: null,
+        delete: 'delete'
+      });
+      const result = await dialog.open();
+      messageDialogResult.textContent = `Result: ${result == null ? 'cancel' : String(result)}`;
+    });
+  }
+
+  const contextMenuDemoList = document.getElementById('contextMenuDemoList');
+  const contextMenuResult = document.getElementById('contextMenuResult');
+  if (contextMenuDemoList) {
+    contextMenuDemoList.items = [
+      { id: 'mail', Title: 'Mail', Description: 'inbox, accounts, notifications' },
+      { id: 'music', Title: 'Music', Description: 'albums, playlists, favorites' },
+      { id: 'weather', Title: 'Weather', Description: 'forecast and locations' },
+      { id: 'photos', Title: 'Photos', Description: 'memories and camera roll' }
+    ];
+
+    let cleanupBindings = [];
+    let internalListObserver = null;
+    const refreshBindings = () => {
+      cleanupBindings.forEach((unbind) => unbind());
+      cleanupBindings = [];
+
+      const dynamicItems = Array.from(
+        contextMenuDemoList.shadowRoot?.querySelectorAll('.list disco-list-item') || []
+      );
+      const staticItems = Array.from(contextMenuDemoList.querySelectorAll('disco-list-item'));
+      const items = [...new Set([...dynamicItems, ...staticItems])];
+
+      items.forEach((itemEl) => {
+        const unbind = DiscoContextMenu.bind(
+          itemEl,
+          () => {
+            const titleEl = itemEl.querySelector('[data-bind="Title"], .item-title');
+            const title = titleEl?.textContent?.trim() || 'app';
+            return [
+              {
+                id: 'pin',
+                label: 'add to start',
+                value: `Pinned ${title}`,
+                action: () => {
+                  if (contextMenuResult) contextMenuResult.textContent = `Result: Pinned ${title}`;
+                  return `Pinned ${title}`;
+                }
+              },
+              {
+                id: 'uninstall',
+                label: 'uninstall',
+                value: `Uninstalled ${title}`,
+                danger: true,
+                action: () => {
+                  if (contextMenuResult) contextMenuResult.textContent = `Result: Uninstalled ${title}`;
+                  return `Uninstalled ${title}`;
+                }
+              },
+              {
+                id: 'details',
+                label: 'app details',
+                value: `Opened details for ${title}`,
+                action: () => {
+                  if (contextMenuResult) contextMenuResult.textContent = `Result: Opened details for ${title}`;
+                  return `Opened details for ${title}`;
+                }
+              }
+            ];
+          },
+          { trigger: 'longpress' }
+        );
+        cleanupBindings.push(unbind);
+      });
+    };
+
+    const observeInternalList = () => {
+      if (internalListObserver) {
+        internalListObserver.disconnect();
+        internalListObserver = null;
+      }
+      const internalList = contextMenuDemoList.shadowRoot?.querySelector('.list');
+      if (!internalList) return;
+      internalListObserver = new MutationObserver(() => refreshBindings());
+      internalListObserver.observe(internalList, { childList: true, subtree: true });
+    };
+
+    observeInternalList();
+    refreshBindings();
+  }
+
+  const demoImage = document.getElementById('demoImage');
+  if (demoImage) {
+    const nextRandomImage = () => {
+      const randomInt = Math.floor(Math.random() * 1_000_000);
+      demoImage.setAttribute('src', `https://picsum.photos/200?random=${randomInt}`);
+      demoImage.setAttribute('fit', 'cover');
+    };
+
+    demoImage.addEventListener('disco-press', nextRandomImage);
+    demoImage.addEventListener('click', nextRandomImage);
   }
 
   if (groupStyleList) {
@@ -327,14 +544,59 @@ const launchDemo = async () => {
     });
   }
 
-  app.launch(frame);
+  if (groupStyleSettingsList) {
+    groupStyleSettingsList.items = [
+      { Title: 'Wi-Fi', Description: 'Connected', separator: 'Connectivity' },
+      { Title: 'Bluetooth', Description: 'Off', separator: 'Connectivity' },
+      { Title: 'Mobile network', Description: '4G', separator: 'Connectivity' },
+      { Title: 'Update', Description: 'No updates available', separator: 'General' },
+      { Title: 'Version', Description: '1.0.0', separator: 'General' },
+      { Title: 'About', Description: 'Device information', separator: 'General' }
+    ];
+    groupStyleSettingsList.addEventListener('separatorselect', (event) => {
+      console.log('Settings group selector selected:', event.detail);
+    });
+  }
 
-  // Simulate manual splash loading (1s - 6s)
-  //app.setupSplash();
-  setTimeout(async () => {
-    await app.dismissSplash();
-    frame.navigate(homePage);
-  }, 1000);
+  if (homePage && homeEasingsItem) {
+    homePage.addEventListener('disco-active-item-change', (event) => {
+      const activeItem = event.detail?.item;
+      if (activeItem === homeEasingsItem) {
+        homeEasingsItem.setAttribute('data-easing-active', '');
+      } else {
+        homeEasingsItem.removeAttribute('data-easing-active');
+      }
+    });
+  }
+
+  if (homeColorsList) {
+    const fragment = document.createDocumentFragment();
+    DISCO_COLORS.forEach((color) => {
+      const row = document.createElement('div');
+      row.className = 'color-row';
+
+      const swatch = document.createElement('div');
+      swatch.className = 'color-swatch';
+      swatch.style.background = color.hex;
+
+      const name = document.createElement('div');
+      name.className = 'color-name';
+      name.textContent = color.name;
+
+      const hex = document.createElement('div');
+      hex.className = 'color-hex';
+      hex.textContent = color.hex;
+
+      row.appendChild(swatch);
+      row.appendChild(name);
+      row.appendChild(hex);
+      fragment.appendChild(row);
+    });
+    homeColorsList.replaceChildren(fragment);
+  }
+
+  app.launch(frame);
+  frame.navigate(homePage);
 };
 
 DiscoApp.ready(launchDemo);
