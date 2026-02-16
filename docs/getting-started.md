@@ -71,3 +71,11 @@ Place a `disco.config.json` in your public root (for example: `www/disco.config.
 ```
 
 You can also pass the same config programmatically during initialization. See [Configuration](configuration.md).
+
+## Vibe coding
+
+Prebuilt "vibe coding" instructions and downloadable system-instruction files are available for fast prototyping with DiscoUI (UI-only) or scaffolding apps with DiscoUI Capacitor.
+
+- For details, see the pages under `docs/vibe-coding/` in this DiscoUI repository.
+- Copilot (local file): download the `docs/vibe-coding/copilot-instructions.md` file from the DiscoUICapacitor repository and use it as a system instruction in Copilot Chat.
+- Google AI Studio: download the `docs/vibe-coding/google-ai-studio-instructions.md` file from the DiscoUICapacitor repository and upload it to Google AI Studio under Advanced → System instructions.
